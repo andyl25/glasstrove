@@ -4,6 +4,10 @@ from graphql_auth import mutations
 from graphene_django import DjangoObjectType
 from .models import User
 
+from graphene_django.forms.converter import convert_form_field
+from django_filters.fields import MultipleChoiceField
+
+
 
 class AuthMutation(graphene.ObjectType):
     register = mutations.Register.Field()
@@ -18,10 +22,13 @@ class AuthMutation(graphene.ObjectType):
     revoke_token = mutations.RevokeToken.Field()
 
 
-
 class UserType(DjangoObjectType):
     class Meta:
         model = User
+        fields = ("id", "username", "following")
+    @convert_form_field.register(MultipleChoiceField)
+    def convert_multiple_choice_filter_to_list_field(field):
+        return graphene.List(graphene.String, required=field.required)
 
 
 class Query(UserQuery, MeQuery, graphene.ObjectType):

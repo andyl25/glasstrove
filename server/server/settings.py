@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'users',
     'graphql_jwt.refresh_token.apps.RefreshTokenConfig',
     'graphql_auth',
+    'posts',
 ]
 
 MIDDLEWARE = [
@@ -51,6 +52,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    
 ]
 
 ROOT_URLCONF = 'server.urls'
@@ -137,7 +139,16 @@ AUTH_USER_MODEL = "users.User"
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
-
+UPDATE_MUTATION_FIELDS = {
+    "first_name": "String",
+    "last_name": "String",
+    "following": "List(graphene.String)",
+}
+GRAPHQL_AUTH = {
+    # You can set the graphene base scalars:
+    "REGISTER_MUTATION_FIELDS":['email', 'username'],
+    "UPDATE_MUTATION_FIELDS": {'first_name':'String', 'last_name':'String', 'following':'Int'},
+}
 AUTHENTICATION_BACKENDS = [
     'graphql_auth.backends.GraphQLAuthBackend',
     'django.contrib.auth.backends.ModelBackend',
