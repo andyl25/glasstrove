@@ -1,7 +1,7 @@
 # frontend/Dockerfile
 
 # pull official base image
-FROM node:15.2.0-alpine
+FROM node:16-alpine3.12
 
 # set working directory
 WORKDIR /usr/src/app
