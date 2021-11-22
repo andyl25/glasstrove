@@ -1,6 +1,19 @@
-FROM python:3.9.7-bullseye
-ENV PYTHONUNBUFFERED=1
-WORKDIR /code
-COPY requirements.txt /code/
+FROM python:3.9.0-slim-buster
+
+# set working directory
+WORKDIR /usr/src/app
+
+# set environment variables
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+# install dependencies
+RUN pip install --upgrade pip
+COPY ./requirements.txt .
 RUN pip install -r requirements.txt
-COPY . /code/
+
+# add app
+COPY . .
+
+# start app
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
