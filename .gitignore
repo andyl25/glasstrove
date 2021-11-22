@@ -1,3 +1,4 @@
 app/node_modules/
 /data/
 /server/venv/
+*.pyc

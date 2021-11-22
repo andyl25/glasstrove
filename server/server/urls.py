@@ -22,6 +22,6 @@ from graphene_django.views import GraphQLView
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('posts.urls')),
-    path("graphql", csrf_exempt(GraphQLView.as_view(graphiql=True))),
+    path("graphql", GraphQLView.as_view(graphiql=True)),
 
 ]
