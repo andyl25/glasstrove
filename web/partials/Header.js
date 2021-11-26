@@ -60,19 +60,15 @@ function Header() {
           <nav className="flex flex-grow">
             <ul className="flex flex-grow justify-end flex-wrap items-center">
               <li>
-                <Link
-                  href="/signin"
-                  className="font-medium text-gray-600 hover:text-gray-900 px-5 py-3 flex items-center transition duration-150 ease-in-out"
-                >
-                  Sign in
+                <Link href="/signin">
+                  <a className="font-medium text-gray-600 hover:text-gray-900 px-5 py-3 flex items-center transition duration-150 ease-in-out">
+                    Sign in
+                  </a>
                 </Link>
               </li>
               <li>
-                <Link
-                  href="/signup"
-                  className="btn-sm text-gray-200 bg-gray-900 hover:bg-gray-800 ml-3"
-                >
-                  <div>
+                <Link href="/signup">
+                  <a className="btn-sm text-gray-200 bg-gray-900 hover:bg-gray-800 ml-3">
                     <span>Sign up</span>
                     <svg
                       className="w-3 h-3 fill-current text-gray-400 flex-shrink-0 ml-2 -mr-1"
@@ -84,7 +80,7 @@ function Header() {
                         fillRule="nonzero"
                       />
                     </svg>
-                  </div>
+                  </a>
                 </Link>
               </li>
             </ul>
