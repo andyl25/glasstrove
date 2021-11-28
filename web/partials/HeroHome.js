@@ -50,12 +50,12 @@ function HeroHome() {
           {/* Hero image */}
           <div>
             <div className="relative flex justify-center mb-8" data-aos="zoom-y-out" data-aos-delay="450">
-              <div className="flex flex-row justify-center space-x-0">
+              <div className="mx-9 flex flex-row justify-center">
 
-                <img className="rounded-2xl w-1/3 transform skew-y-6" src="https://lh3.googleusercontent.com/GS1ISv04SMCaNyBnc2WAWdQG0MLQ3mkboDqhdEFR8M6PXs6xAC-zUQaMTDk9sfk4OeLIYpA7jqDFChJ8aHXz3nQnNf6drrqS28xL" />
-                <img className="rounded-2xl w-1/3 transform skew-y-6" src="https://lh3.googleusercontent.com/qxky4Bie8peNjK4VkIUyXjXp91tv8a5qfEfP50NOP4pdW4fggUmoJFnII08WYwPYe8QpgJkoXvBzriUN_qTSuxX8VyTXozWqwvi5_g" />
+                <img className="z-20 -mx-8 rounded-2xl w-1/3 transform skew-y-6" src="https://lh3.googleusercontent.com/GS1ISv04SMCaNyBnc2WAWdQG0MLQ3mkboDqhdEFR8M6PXs6xAC-zUQaMTDk9sfk4OeLIYpA7jqDFChJ8aHXz3nQnNf6drrqS28xL" />
+                <img className="z-10 -mx-8 rounded-2xl w-1/3 transform skew-y-6" src="https://lh3.googleusercontent.com/qxky4Bie8peNjK4VkIUyXjXp91tv8a5qfEfP50NOP4pdW4fggUmoJFnII08WYwPYe8QpgJkoXvBzriUN_qTSuxX8VyTXozWqwvi5_g" />
                 
-                <img className="rounded-2xl w-1/3 transform skew-y-6" src="https://lh3.googleusercontent.com/Gwk0ZXD4fs7NomQ7K7zzlF_lORkIwdJCgUMxMk7Ad23wl4x5sKIIVcNOTn5IwUwwJQCsjF9-sa-0NA_bdEWl0a0pxVf2fGXs0twi78o=w404" />
+                <img className="z-0 -mx-8 rounded-2xl w-1/3 transform skew-y-6" src="https://lh3.googleusercontent.com/Gwk0ZXD4fs7NomQ7K7zzlF_lORkIwdJCgUMxMk7Ad23wl4x5sKIIVcNOTn5IwUwwJQCsjF9-sa-0NA_bdEWl0a0pxVf2fGXs0twi78o=w404" />
 
               </div>
               {/* <div className="flex flex-row justify-center space-x-5">
