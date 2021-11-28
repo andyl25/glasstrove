@@ -64,10 +64,7 @@ function HeroHome() {
                 <img className="rounded-2xl w-1/2" src="https://lh3.googleusercontent.com/qxky4Bie8peNjK4VkIUyXjXp91tv8a5qfEfP50NOP4pdW4fggUmoJFnII08WYwPYe8QpgJkoXvBzriUN_qTSuxX8VyTXozWqwvi5_g" />
 
               </div> */}
-              <button className="absolute top-full flex items-center transform -translate-y-1/2 bg-white rounded-full font-medium group p-4 shadow-lg" onClick={(e) => { e.preventDefault(); e.stopPropagation(); setVideoModalOpen(true); }} aria-controls="modal">
-
-                <span>Watch the full video (2 min)</span>
-              </button>
+              
             </div>
 
             {/* Modal */}
