@@ -8,6 +8,7 @@ import {
   // useQuery,
   gql,
 } from '@apollo/client';
+import "../css/style.scss"
 
 const link = createHttpLink({
   // uri: 'http://0.0.0.0:8000/graphql',
