@@ -14,6 +14,7 @@ class Query(
 
 class Mutation(
     users.schema.Mutation,
+    posts.schema.Mutation,
 ):
     pass
 
