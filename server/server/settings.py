@@ -29,10 +29,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '(es!w-es%_a)s128y(2mru-#c*4c8p%6)i+&x1@z8_s(%mgtl_'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ["0.0.0.0", "localhost"]
-
+ALLOWED_HOSTS = ['localhost']
 
 # Application definition
 
@@ -64,9 +63,12 @@ MIDDLEWARE = [
     
 ]
 
+CORS_ORIGIN_ALLOW_ALL = False
+
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:81"
+    
 ]
+
 
 ROOT_URLCONF = 'server.urls'
 
