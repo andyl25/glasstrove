@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'graphql_jwt.refresh_token.apps.RefreshTokenConfig',
     'graphql_auth',
     'posts',
+    'wallets',
 ]
 
 MIDDLEWARE = [
@@ -62,8 +63,8 @@ MIDDLEWARE = [
     
 ]
 
-CORS_ORIGIN_WHITELIST = [
-
+CORS_ALLOWED_ORIGINS = [
+    "https://localhost:81/graphql"
 ]
 
 ROOT_URLCONF = 'server.urls'
