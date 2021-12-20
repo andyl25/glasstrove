@@ -100,8 +100,14 @@ class Test(graphene.Mutation):
         
 class Query(UserQuery, MeQuery, graphene.ObjectType):
     specific_user = graphene.Field(UserType, username = graphene.String())
+    search_users = graphene.List(UserType, searchstring = graphene.String(), numresults = graphene.Int())
     def resolve_specific_user(root, info, username):
         return User.objects.get(username = username)
+    def resolve_search_users(root, info, searchstring, numresults):
+        user_list = User.objects.filter(username__icontains=searchstring)
+        return user_list.order_by('numfollowers')[:numresults]
+
+
 
 
 class Mutation(AuthMutation, graphene.ObjectType):
