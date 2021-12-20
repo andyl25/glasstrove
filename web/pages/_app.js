@@ -7,28 +7,44 @@ import {
   createHttpLink,
   // useQuery,
   gql,
-} from '@apollo/client';
-import "../css/style.scss"
+} from "@apollo/client";
+import "../css/style.scss";
+import "../css/theme.css";
+import cookie from "react-cookies";
 
 const link = createHttpLink({
-  // uri: 'http://0.0.0.0:8000/graphql',
-  // credentials: "same-origin",
-  uri: "https://countries.trevorblades.com"
+  uri: "/graphql",
+  credentials: "same-origin",
+  // uri: "https://countries.trevorblades.com"
 });
 
-// const AuthLink = new ApolloLink((operation, forward) => {
-//   const token = window.localStorage.getItem("auth_token");
-//   operation.setContext({
-//     headers: {
-//       authorization: token ? `JWT ${token}` : "",
-//     },
-//   });
-//   return forward(operation);
-// });
+const AuthLink = new ApolloLink((operation, forward) => {
+  let token = cookie.load("csrftoken");
+  if (token === undefined || token === null) {
+    fetch(`/csrf`, {
+      credentials: "include",
+    }).then((response) => {
+      token = response.json().csrfToken;
+      operation.setContext({
+        headers: {
+          "X-CSRFToken": token,
+        },
+      });
+      return forward(operation);
+    });
+  } else {
+    operation.setContext({
+      headers: {
+        "X-CSRFToken": token,
+      },
+    });
+    return forward(operation);
+  }
+});
 
 const client = new ApolloClient({
   cache: new InMemoryCache(),
-  link: ApolloLink.from([link]),
+  link: ApolloLink.from([AuthLink, link]),
 });
 
 class MyApp extends App {
