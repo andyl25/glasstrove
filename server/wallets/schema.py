@@ -16,12 +16,12 @@ from django.contrib.auth.decorators import login_required
 class WalletType(DjangoObjectType):
     class Meta:
         model = Wallet
-        fields = ("owner", "address")
+        fields = ("owner", "address", "wallet_type")
 
 class Query(UserQuery, MeQuery, graphene.ObjectType):
     wallets = graphene.List(WalletType)
     def resolve_wallets(root, info):
-        return Wallet.objects.all
+        return Wallet.objects.all()
 
 
 

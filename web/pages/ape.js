@@ -15,4 +15,5 @@ const Ape = () => {
   return <div>{console.log(data)}</div>;
 };
 
+console.log("hellow")
 export default Ape;

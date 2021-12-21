@@ -88,7 +88,6 @@ class StopFollowing(graphene.Mutation):
 
 
 
-
 #remeber to delete this
 class Test(graphene.Mutation):
     ok = graphene.Boolean()
