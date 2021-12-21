@@ -5,7 +5,7 @@ from graphene_django import DjangoObjectType
 from .models import User
 from posts.models import Post
 from posts.schema import PostType
-from wallet.models import Wallet
+from wallets.models import Wallet
 
 from graphene_django.forms.converter import convert_form_field
 from django_filters.fields import MultipleChoiceField
@@ -16,24 +16,15 @@ from django.contrib.auth.decorators import login_required
 class WalletType(DjangoObjectType):
     class Meta:
         model = Wallet
-        fields = ("")
+        fields = ("owner", "address")
 
-class AuthMutation(graphene.ObjectType):
-    register = mutations.Register.Field()
-    verify_account = mutations.VerifyAccount.Field()
-    update_account = mutations.UpdateAccount.Field()
-    resend_activation_email = mutations.ResendActivationEmail.Field()
-    send_passord_reset_email = mutations.SendPasswordResetEmail.Field()
-    password_reset = mutations.PasswordReset.Field()
+class Query(UserQuery, MeQuery, graphene.ObjectType):
+    wallets = graphene.List(WalletType)
+    def resolve_wallets(root, info):
+        return Wallet.objects.all
 
 
-class Mutation(graphene.ObjectType):
-    login = Login.Field()
-    logout = Logout.Field()
-    test = Test.Field()
-    add_following = AddFollowing.Field()
-    stop_following = StopFollowing.Field()
 
-schema = graphene.Schema(mutation=Mutation)
+schema = graphene.Schema(query = Query)
 
 

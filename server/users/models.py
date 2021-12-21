@@ -4,6 +4,8 @@ from posts.models import Post
 from django.conf import settings
 
 
+
+
 class User(AbstractUser):
     id = models.AutoField(primary_key=True)
     email = models.EmailField(blank=False, max_length = 255, verbose_name="email")

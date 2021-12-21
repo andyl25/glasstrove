@@ -27,7 +27,7 @@ class AuthMutation(graphene.ObjectType):
 class UserType(DjangoObjectType):
     class Meta:
         model = User
-        fields = ("id", "username", "following", "numfollowers", "owned_post", "wallets")
+        fields = ("id", "username", "following", "numfollowers", "owned_post", "wallets", "posts")
 
 
 class Login(graphene.Mutation):
