@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 import Header from "../partials/Header";
 import "tailwindcss/tailwind.css";
-import { gql, useMutation, useQuery } from "@apollo/client";
+import { gql, useMutation } from "@apollo/client";
+import { useRouter } from "next/router";
 
 const LOGIN = gql`
   mutation Login($username: String!, $password: String!) {
@@ -12,38 +13,12 @@ const LOGIN = gql`
   }
 `;
 
-const ME = gql`
-  query {
-    me {
-      username
-      following {
-        username
-      }
-      followers {
-        username
-      }
-      numfollowers
-      posts {
-        id
-        title
-        imageUrl
-        xPos
-        yPos
-        size
-      }
-    }
-  }
-`;
-function Home() {
+function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [login] = useMutation(LOGIN);
-  const { loading, error, data } = useQuery(ME);
+  const router = useRouter();
 
-  useEffect(() => {
-    console.log(data);
-  })
-  
   return (
     <div className="flex flex-col min-h-screen overflow-hidden">
       <Header />
@@ -79,7 +54,9 @@ function Home() {
                 login({
                   variables: { username: username, password: password },
                   onCompleted(data) {
-                    console.log(data);
+                    if (data.login.ok) {
+                      router.push("/" + username);
+                    }
                   },
                 })
               }
@@ -93,4 +70,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default Login;
