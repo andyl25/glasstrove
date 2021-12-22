@@ -11,6 +11,7 @@ import {
 import "../css/style.scss";
 import "../css/theme.css";
 import cookie from "react-cookies";
+import Head from "next/head";
 
 const link = createHttpLink({
   uri: "/graphql",
@@ -52,6 +53,13 @@ class MyApp extends App {
     const { Component, pageProps } = this.props;
     return (
       <ApolloProvider client={client}>
+        <Head>
+          <title>GlassTrove</title>
+          <meta
+            name="viewport"
+            content="initial-scale=1.0, width=device-width"
+          />
+        </Head>
         <Component {...pageProps} />
       </ApolloProvider>
     );
