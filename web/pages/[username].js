@@ -4,7 +4,7 @@ import Header from "../partials/Header";
 import "tailwindcss/tailwind.css";
 import { gql, useMutation, useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
-import Shuffle from "shufflejs";
+import Shuffle from "../shuffle/shuffle";
 import imagesLoaded from "imagesloaded";
 
 // change to postList with specific number of posts to get
