@@ -3,7 +3,9 @@ from django.db import models
 
 class Post(models.Model):
     id = models.AutoField(primary_key=True)
-    title = models.CharField(max_length=300, default="no title")
+    title = models.CharField(max_length=300, null=True, default="")
+    description = models.CharField(max_length=1000, null = True, default="")
+    external_link =  models.URLField(blank=True, null=True)
     image_url = models.URLField(blank=True, null=True)
     order = models.IntegerField(blank=True, null=True)
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='posts')
@@ -12,3 +14,5 @@ class Post(models.Model):
     y_pos = models.IntegerField(blank = True, null=True)
     size = models.IntegerField(blank = True, null=True)
     profile_pic = models.BooleanField(blank = False, default=False)
+    post_token_id = models.CharField(max_length=300, blank = False, default="1")
+    post_asset_contract = models.CharField(max_length=600, blank = False, default="1")
