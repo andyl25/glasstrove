@@ -24,13 +24,33 @@ const PROFILE = gql`
   }
 `;
 
+const ME = gql`
+  query {
+    me {
+      username
+      following {
+        username
+      }
+    }
+  }
+`;
+
+const FOLLOW = gql`
+  mutation Follow($username: String!) {
+    addFollowing(username: $username) {
+      ok
+    }
+  }
+`;
+
 function Home() {
   const router = useRouter();
   const { username } = router.query;
   const { loading, error, data, refetch } = useQuery(PROFILE, {
     variables: { username },
   });
-
+  const meQuery = useQuery(ME);
+  const [follow] = useMutation(FOLLOW);
   useEffect(() => {
     if (!loading && !error) {
       let grid = document.querySelectorAll(".masonry-grid"),
@@ -55,6 +75,32 @@ function Home() {
     }
   });
 
+  function handleFollow() {
+    if (meQuery.data.me == null) {
+      router.push("/login");
+    } else {
+      follow({
+        variables: { username: username },
+        onCompleted(data) {
+          if (data.addFollowing.ok) {
+            meQuery.refetch();
+            refetch({variables: {username}});
+          } else {
+            router.push("/login");
+          }
+        },
+      });
+    }
+  }
+
+  function includesName(followerList, specificName) {
+    for (let i = 0; i < followerList.length; i++) {
+      if (followerList[i].username == specificName) {
+        return true;
+      }
+    }
+    return false;
+  }
   return (
     <div className="flex flex-col min-h-screen overflow-hidden">
       <Header />
@@ -72,8 +118,36 @@ function Home() {
             <h1 class="profilename text-light mb-0">{username}</h1>
           </div>
         </section> */}
-        <div class="container position-relative zindex-5 text-center pt-md-6 pt-lg-7 py-5 my-lg-3">
+        <div class="container position-relative zindex-5 text-center pt-md-6 pt-lg-7 py-5 my-lg-3 pb-0">
+          {/* show profile pic */}
           <h1 class="profilename text-purple-600 mb-0">{username}</h1>
+          {!loading && !error && (
+            <p class="fs-lg text-gray-500 mt-1">
+              {data.specificUser.numfollowers} Followers
+            </p>
+          )}
+          {!meQuery.loading &&
+            !meQuery.error &&
+            !includesName(meQuery.data.me.following, username) && (
+              <button
+                type="button"
+                class="btn btn-translucent-primary mt-4"
+                onClick={handleFollow}
+              >
+                Follow
+              </button>
+            )}
+          {!meQuery.loading &&
+            !meQuery.error &&
+            includesName(meQuery.data.me.following, username) && (
+              <button
+                type="button"
+                class="btn btn-translucent-success mt-4"
+                disabled
+              >
+                Following
+              </button>
+            )}
         </div>
         {!loading && !error && (
           <section class="container overflow-hidden py-5 py-md-6 py-lg-7">
