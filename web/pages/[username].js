@@ -39,7 +39,7 @@ function Home() {
       if (grid === null) return;
 
       function sortByOrder(element) {
-        return element.getAttribute('order') * 10
+        return element.getAttribute("order") * 10;
       }
 
       for (let i = 0; i < grid.length; i++) {
@@ -50,7 +50,7 @@ function Home() {
         imagesLoaded(grid[i]).on("progress", () => {
           masonry.layout();
         });
-        masonry.sort({by: sortByOrder});
+        masonry.sort({ by: sortByOrder });
       }
     }
   });
@@ -81,7 +81,7 @@ function Home() {
               <div
                 class="masonry-grid"
                 data-columns={
-                  window.innerWidth > 1000
+                  window.innerWidth > 1200
                     ? "4"
                     : window.innerWidth > 750
                     ? "3"
