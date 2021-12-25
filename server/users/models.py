@@ -12,7 +12,7 @@ class User(AbstractUser):
     following = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='followers', blank=True)
     numfollowers = models.IntegerField(default = 0, blank = False)
     nonce = models.IntegerField(default = random.randrange(1, 1000000), blank = False)
-    bio = models.CharField(default = "", blank = False, max_length=150)
+    bio = models.CharField(default = "", blank = True, max_length=150)
     # wallets = models.
 
     USERNAME_FIELD = "username"
