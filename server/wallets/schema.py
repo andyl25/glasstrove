@@ -6,6 +6,8 @@ from .models import User
 from posts.models import Post
 from posts.schema import PostType
 from wallets.models import Wallet
+from web3 import Web3
+
 
 from graphene_django.forms.converter import convert_form_field
 from django_filters.fields import MultipleChoiceField
@@ -16,7 +18,8 @@ from django.contrib.auth.decorators import login_required
 class WalletType(DjangoObjectType):
     class Meta:
         model = Wallet
-        fields = ("owner", "address", "wallet_type")
+        fields = ("owner", "address", "wallet_type", "id")
+
 
 class Query(UserQuery, MeQuery, graphene.ObjectType):
     wallets = graphene.List(WalletType)
