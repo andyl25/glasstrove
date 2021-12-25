@@ -4,7 +4,8 @@ import Header from "../partials/Header";
 import "tailwindcss/tailwind.css";
 import { gql, useMutation, useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
-import Shuffle from "shufflejs";
+import Shuffle from "../shuffle/shuffle";
+import imagesLoaded from "imagesloaded";
 
 // change to postList with specific number of posts to get
 const PROFILE = gql`
@@ -23,13 +24,33 @@ const PROFILE = gql`
   }
 `;
 
+const ME = gql`
+  query {
+    me {
+      username
+      following {
+        username
+      }
+    }
+  }
+`;
+
+const FOLLOW = gql`
+  mutation Follow($username: String!) {
+    addFollowing(username: $username) {
+      ok
+    }
+  }
+`;
+
 function Home() {
   const router = useRouter();
   const { username } = router.query;
   const { loading, error, data, refetch } = useQuery(PROFILE, {
     variables: { username },
   });
-
+  const meQuery = useQuery(ME);
+  const [follow] = useMutation(FOLLOW);
   useEffect(() => {
     if (!loading && !error) {
       let grid = document.querySelectorAll(".masonry-grid"),
@@ -37,21 +58,54 @@ function Home() {
 
       if (grid === null) return;
 
+      function sortByOrder(element) {
+        return element.getAttribute("order") * 10;
+      }
+
       for (let i = 0; i < grid.length; i++) {
         masonry = new Shuffle(grid[i], {
           itemSelector: ".masonry-grid-item",
           sizer: ".masonry-grid-item",
         });
-        masonry.layout();
+        imagesLoaded(grid[i]).on("progress", () => {
+          masonry.layout();
+        });
+        masonry.sort({ by: sortByOrder });
       }
     }
   });
 
+  function handleFollow() {
+    if (meQuery.data.me == null) {
+      router.push("/login");
+    } else {
+      follow({
+        variables: { username: username },
+        onCompleted(data) {
+          if (data.addFollowing.ok) {
+            meQuery.refetch();
+            refetch({variables: {username}});
+          } else {
+            router.push("/login");
+          }
+        },
+      });
+    }
+  }
+
+  function includesName(followerList, specificName) {
+    for (let i = 0; i < followerList.length; i++) {
+      if (followerList[i].username == specificName) {
+        return true;
+      }
+    }
+    return false;
+  }
   return (
-    <main className="page-wrapper">
+    <div className="flex flex-col min-h-screen overflow-hidden">
       <Header />
-      <div>
-        <section class="position-relative bg-purple-300 pt-7 pb-5 pb-md-7 bg-size-cover bg-attachment-fixed">
+      <main classname="flex-grow">
+        {/* <section class="position-relative bg-purple-300 pt-7 pb-5 pb-md-7 bg-size-cover bg-attachment-fixed">
           <div class="shape shape-bottom shape-curve bg-body">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3000 185.4">
               <path
@@ -63,14 +117,45 @@ function Home() {
           <div class="container position-relative zindex-5 text-center pt-md-6 pt-lg-7 py-5 my-lg-3">
             <h1 class="profilename text-light mb-0">{username}</h1>
           </div>
-        </section>
+        </section> */}
+        <div class="container position-relative zindex-5 text-center pt-md-6 pt-lg-7 py-5 my-lg-3 pb-0">
+          {/* show profile pic */}
+          <h1 class="profilename text-purple-600 mb-0">{username}</h1>
+          {!loading && !error && (
+            <p class="fs-lg text-gray-500 mt-1">
+              {data.specificUser.numfollowers} Followers
+            </p>
+          )}
+          {!meQuery.loading &&
+            !meQuery.error &&
+            !includesName(meQuery.data.me.following, username) && (
+              <button
+                type="button"
+                class="btn btn-translucent-primary mt-4"
+                onClick={handleFollow}
+              >
+                Follow
+              </button>
+            )}
+          {!meQuery.loading &&
+            !meQuery.error &&
+            includesName(meQuery.data.me.following, username) && (
+              <button
+                type="button"
+                class="btn btn-translucent-success mt-4"
+                disabled
+              >
+                Following
+              </button>
+            )}
+        </div>
         {!loading && !error && (
           <section class="container overflow-hidden py-5 py-md-6 py-lg-7">
             <div class="masonry-filterable">
               <div
                 class="masonry-grid"
                 data-columns={
-                  window.innerWidth > 1000
+                  window.innerWidth > 1200
                     ? "4"
                     : window.innerWidth > 750
                     ? "3"
@@ -78,7 +163,7 @@ function Home() {
                 }
               >
                 {data.specificUser.posts.map((post) => (
-                  <div class="masonry-grid-item">
+                  <div class="masonry-grid-item" order={post.order}>
                     <div class="card card-curved-body shadow card-slide">
                       <div class="card-slide-inner">
                         <img
@@ -86,9 +171,13 @@ function Home() {
                           src={post.imageUrl}
                           alt={post.title}
                         />
-                        <a class="card-body text-center" href="/posts">
+                        <a
+                          class="card-body text-center"
+                          href={"/post/" + post.id}
+                        >
                           <h3 class="h5 nav-heading mt-1 mb-2">{post.title}</h3>
                           <p class="fs-sm text-muted mb-1">DESCRIPTION</p>
+                          {/* <p>{post.order}</p> */}
                         </a>
                       </div>
                     </div>
@@ -99,8 +188,8 @@ function Home() {
             </div>
           </section>
         )}
-      </div>
-    </main>
+      </main>
+    </div>
   );
 }
 
