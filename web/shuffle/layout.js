@@ -101,10 +101,11 @@ export function getShortColumn(positions, buffer) {
  * @return {Point}
  */
 export function getItemPosition({
-  itemSize, positions, gridSize, total, threshold, buffer, index
+  itemSize, positions, gridSize, total, threshold, buffer, index,
 }) {
   const span = getColumnSpan(itemSize.width, gridSize, total, threshold);
   const setY = getAvailablePositions(positions, span, total);
+  // const shortColumnIndex = getShortColumn(setY, buffer);
   const shortColumnIndex = index % positions.length;
 
   // Position the item

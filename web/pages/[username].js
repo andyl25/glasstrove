@@ -39,19 +39,19 @@ function Home() {
       if (grid === null) return;
 
       function sortByOrder(element) {
-        return element.getAttribute('order');
+        return element.getAttribute('order') * 10
       }
-    
-      masonry = new Shuffle(grid[0], {
-        itemSelector: ".masonry-grid-item",
-        sizer: ".masonry-grid-item",
-      });
 
-      masonry.sort({by: sortByOrder})
-
-      imagesLoaded(grid[0]).on("progress", () => {
-        masonry.layout();
-      });
+      for (let i = 0; i < grid.length; i++) {
+        masonry = new Shuffle(grid[i], {
+          itemSelector: ".masonry-grid-item",
+          sizer: ".masonry-grid-item",
+        });
+        imagesLoaded(grid[i]).on("progress", () => {
+          masonry.layout();
+        });
+        masonry.sort({by: sortByOrder});
+      }
     }
   });
 
@@ -103,6 +103,7 @@ function Home() {
                         >
                           <h3 class="h5 nav-heading mt-1 mb-2">{post.title}</h3>
                           <p class="fs-sm text-muted mb-1">DESCRIPTION</p>
+                          {/* <p>{post.order}</p> */}
                         </a>
                       </div>
                     </div>
