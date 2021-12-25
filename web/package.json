@@ -21,7 +21,8 @@
     "react-transition-group": "^4.4.2",
     "sass": "^1.43.5",
     "throttleit": "^1.0.0",
-    "tiny-emitter": "^2.1.0"
+    "tiny-emitter": "^2.1.0",
+    "web3": "^1.6.1",
   },
   "devDependencies": {
     "autoprefixer": "^10.4.0",
