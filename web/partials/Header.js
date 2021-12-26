@@ -27,15 +27,12 @@ function Header() {
             {/* Logo */}
             <nav className="flex flex-grow">
             <ul className="flex flex-grow justify-end flex-wrap items-center">
-              <li>
-                <Link href="/">
-                  <a>
-                    <a className="font-semibold text-gray-600 text-2xl items-center hover:text-gray-900 transition duration-150 ease-in-out">glass</a>
-                    <a className="font-semibold text-purple-600 text-2xl items-center hover:text-gray-900 transition duration-150 ease-in-out">trove</a>
+                <li>
+                  <a className = "group hover:no-underline" href="/">
+                    <a className="no-underline font-bold text-gray-600 text-2xl items-center group-hover:text-gray-700 hover:no-underline transition duration-150 ease-in-out">glass</a>
+                    <a className="no-underline font-bold text-purple-600 text-2xl items-center group-hover:text-gray-900 hover:no-underline transition duration-150 ease-in-">trove</a>
                   </a>
-                  
-                </Link>
-              </li>
+                </li>
             </ul>
           </nav>
             
@@ -43,13 +40,20 @@ function Header() {
 
           {/* Site navigation */}
           <nav className="flex flex-grow">
-            <ul className="flex flex-grow justify-end flex-wrap items-center">
-              <li>
-                <Link href="/">
-                  <a className="btn-sm text-gray-200 bg-gray-900 hover:bg-gray-800 ml-3">
-                    <span>Coming Soon</span>
-                  </a>
-                </Link>
+            <ul className="flex flex-grow justify-end flex-wrap items-center space-x-6">
+              <li className="">
+                {/* <Link href="/"> */}
+                <a className = "group hover:no-underline" href="/">
+                    <a className="no-underline font-semibold text-gray-500 text-lg items-center group-hover:text-gray-700 hover:no-underline transition duration-150 ease-in-out">Home</a>
+                </a>
+                {/* </Link> */}
+              </li>
+              <li className="">
+                {/* <Link href="/"> */}
+                <a className = "group hover:no-underline" href="/">
+                    <a className="no-underline font-semibold text-gray-500 text-lg items-center group-hover:text-gray-700 hover:no-underline transition duration-150 ease-in-out">Profile</a>
+                </a>
+                {/* </Link> */}
               </li>
             </ul>
           </nav>

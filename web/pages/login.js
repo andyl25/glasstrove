@@ -8,7 +8,10 @@ import { useRouter } from "next/router";
 const LOGIN = gql`
   mutation Login($username: String!, $password: String!) {
     login(username: $username, password: $password) {
-      ok
+      ok,
+      user{
+        username,
+      }
     }
   }
 `;
@@ -55,7 +58,7 @@ function Login() {
                   variables: { username: username, password: password },
                   onCompleted(data) {
                     if (data.login.ok) {
-                      router.push("/" + username);
+                      router.push("/" + data.login.user.username);
                     }
                   },
                 })
