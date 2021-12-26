@@ -1,7 +1,5 @@
 @charset "UTF-8";
 /*
- * Around | Multipurpose Bootstrap Template
- * Copyright 2021 Createx Studio
  * Theme styles
  */
 @import url("https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700&display=swap");
@@ -818,9 +816,10 @@
   content: "\e9c4";
 }
 
-.ai-plus-square:before {
+.ai-plus-square:before{
   content: "\e9c5";
 }
+
 
 .ai-plus:before {
   content: "\e9c6";
@@ -16835,7 +16834,7 @@ input[type="search"]::-webkit-search-results-decoration {
 }
 
 .btn-translucent-dark {
-  background-color: rgba(55, 56, 78, 0.08);
+  background-color: rgba(163, 160, 160, 0.08);
 }
 
 .btn-translucent-primary {
@@ -16902,7 +16901,7 @@ input[type="search"]::-webkit-search-results-decoration {
 .btn-translucent-dark:active,
 .btn-translucent-dark.active,
 .btn-translucent-dark.show {
-  background-color: #37384e;
+  background-color: #9292a6;
 }
 
 .btn-translucent-light {

@@ -7,6 +7,9 @@ from users.models import User
 # from users.schema import UserType
 import json
 import requests
+import datetime
+from django.db.models import Q
+
 
 
 from graphene_django.forms.converter import convert_form_field
@@ -17,7 +20,7 @@ from django.contrib.auth.decorators import login_required
 class PostType(DjangoObjectType):
     class Meta:
         model = Post
-        fields = ("id", "title", "owner", "order", "image_url", "x_pos", "y_pos", "size", "description", "external_link", "post_token_id", "post_asset_contract")
+        fields = ("id", "title", "owner", "order", "image_url", "x_pos", "y_pos", "size", "description", "external_link", "post_token_id", "post_asset_contract", "posted_date")
 
 # class AddPost(graphene.Mutation):
 #     class Arguments:
@@ -82,17 +85,17 @@ class AddPosts(graphene.Mutation):
                     # if response.json()["assets"] is None:
                     #     continue
                     for i in ((response.json()["assets"])):
-                        test_post = Post.objects.filter(post_token_id = i["token_id"]).filter(post_asset_contract = i["asset_contract"]["address"])
+                        test_post = Post.objects.filter(owner=user_instance).filter(post_token_id = i["token_id"]).filter(post_asset_contract = i["asset_contract"]["address"])
                         if(test_post.count() == 0):
-                            if not Post.objects.all():
+                            if not Post.objects.filter(owner=user_instance).all():
                                 new_post = Post(image_url = i["image_url"], title = i["name"], description = i["description"], 
                                     external_link = i["external_link"], owner = info.context.user, post_token_id = i["token_id"], 
-                                    post_asset_contract = i["asset_contract"]["address"], order = 1)
+                                    post_asset_contract = i["asset_contract"]["address"], order = 1, posted_date = datetime.datetime.now())
                                 new_post.save()
                             else:
                                 new_post = Post(image_url = i["image_url"], title = i["name"], description = i["description"], 
                                     external_link = i["external_link"], owner = info.context.user, post_token_id = i["token_id"], 
-                                    post_asset_contract = i["asset_contract"]["address"], order = Post.objects.all().order_by('order')[:1][0].order + 1)
+                                    post_asset_contract = i["asset_contract"]["address"], order = Post.objects.filter(owner=user_instance).all().order_by('order')[:1][0].order + 1, posted_date = datetime.datetime.now())
                                 new_post.save()
                         # print(i)
             else:
@@ -104,17 +107,17 @@ class AddPosts(graphene.Mutation):
                 response = requests.request("GET", uri)
                 # print(uri)
                 for i in ((response.json()["assets"])):
-                    test_post = Post.objects.filter(post_token_id = i["token_id"]).filter(post_asset_contract = i["asset_contract"]["address"])
+                    test_post = Post.objects.filter(owner=user_instance).filter(post_token_id = i["token_id"]).filter(post_asset_contract = i["asset_contract"]["address"])
                     if(test_post.count() == 0):
-                        if not Post.objects.all():
+                        if not Post.objects.filter(owner=user_instance).all():
                             new_post = Post(image_url = i["image_url"], title = i["name"], description = i["description"], 
                                 external_link = i["external_link"], owner = info.context.user, post_token_id = i["token_id"], 
-                                post_asset_contract = i["asset_contract"]["address"], order = 1)
+                                post_asset_contract = i["asset_contract"]["address"], order = 1, posted_date = datetime.datetime.now())
                             new_post.save()
                         else:
                             new_post = Post(image_url = i["image_url"], title = i["name"], description = i["description"], 
                                 external_link = i["external_link"], owner = info.context.user, post_token_id = i["token_id"], 
-                                post_asset_contract = i["asset_contract"]["address"], order = Post.objects.all().order_by('order')[:1][0].order + 1)
+                                post_asset_contract = i["asset_contract"]["address"], order = Post.objects.filter(owner=user_instance).all().order_by('order')[:1][0].order + 1, posted_date = datetime.datetime.now())
                             new_post.save()
                     # print(i)
 
@@ -201,6 +204,7 @@ class Query(graphene.ObjectType):
     post_list = graphene.List(PostType, username=graphene.String(), numresults = graphene.Int())
     specific_post = graphene.List(PostType, id = graphene.Int())
     profile_pic = graphene.List(PostType, username=graphene.String())
+    feed = graphene.List(PostType, numresults=graphene.Int())
     def resolve_profile_pic(root, info, username):
         user_owner = User.objects.get(username = username)
         pp = Post.objects.filter(owner = user_owner)
@@ -214,11 +218,19 @@ class Query(graphene.ObjectType):
     def resolve_specific_post(root, info, id):
         posts = Post.objects.filter(id = id)
         return posts
+    def resolve_feed(root, info, numresults=None):
+        query = Q()
+        for person in info.context.user.following.all():
+            query.add(Q(owner=person), Q.OR)
+        posts = Post.objects.filter(query).order_by("-posted_date")[:numresults]
+        return posts
 
 class Mutation(graphene.ObjectType):
     add_posts = AddPosts.Field()
     edit_post = EditPost.Field()
     delete_post = deletePost.Field()
     reorder_posts = ReorderPosts.Field()
+
+
 
 schema = graphene.Schema(query = Query, mutation = Mutation)
