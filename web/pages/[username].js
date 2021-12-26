@@ -73,6 +73,9 @@ function Home() {
         masonry.sort({ by: sortByOrder });
       }
     }
+    if (!loading && error) {
+      router.replace('/')
+    }
   });
 
   function handleFollow() {
