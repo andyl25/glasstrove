@@ -42,12 +42,17 @@ class Login(graphene.Mutation):
     ok = graphene.Boolean()
     user = graphene.Field(UserType)
     def mutate(root, info, username, password):
+        print("1")
         user_instance = authenticate(username=username, password=password)
+        print(user_instance)
         if user_instance is not None:
             login(info.context, user_instance)
             return Login(ok=True, user=user_instance)
         else:
-            username = User.objects.get(email=username)
+            username = User.objects.filter(email=username)
+            if(len(username) is 0):
+                return Login(ok=False, user=None)
+            username = username[0]
             user_instance = authenticate(username=username, password=password)
             if user_instance is not None:
                 login(info.context, user_instance)
