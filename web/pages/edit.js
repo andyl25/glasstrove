@@ -31,14 +31,15 @@ const ME = gql`
 `;
 
 function Home() {
-  return (
+    const {data, loading, error} = useQuery(ME);
+    return (
     <div className="">
 
       {/*  Site header */}
       <Header />
 
       {/*  Page content */}
-      <main className="">
+        <main className="">
             <div class="border-bottom pt-2 pb-2 mb-5 mx-28">
                 <div class="content-center text-center flex flex-nowrap justify-center">
                     <div className="px-24 text-center pt-28 mb-4">
@@ -61,11 +62,22 @@ function Home() {
                     </div>
                 </div>
             </div>
-      </main>
+        </main>
+        <div>
+            {!loading && !error && (
+                data.me.username
+                )}
+        </div>
+
+    
 
 
     </div>
   );
+}
+
+function getURI(){
+    
 }
 
 export default Home;
