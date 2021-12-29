@@ -19,6 +19,7 @@ const PROFILE = gql`
         order
         imageUrl
         size
+        description
       }
     }
   }
@@ -179,7 +180,7 @@ function Home() {
                           href={"/post/" + post.id}
                         >
                           <h3 class="h5 nav-heading mt-1 mb-2">{post.title}</h3>
-                          <p class="fs-sm text-muted mb-1">DESCRIPTION</p>
+                          <p class="fs-sm text-muted mb-1">{post.description}</p>
                           {/* <p>{post.order}</p> */}
                         </a>
                       </div>

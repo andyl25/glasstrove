@@ -3645,12 +3645,10 @@ progress {
   color: #737491;
   background-color: #fff;
   background-clip: padding-box;
-  border: 1px solid #dfdfeb;
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
   border-radius: 0.75rem;
-  box-shadow: 0 0 0 0 transparent;
   transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 }
 @media (prefers-reduced-motion: reduce) {
@@ -3667,10 +3665,8 @@ progress {
 .form-control:focus {
   color: #737491;
   background-color: #fff;
-  border-color: rgba(118, 109, 244, 0.35);
+  border-color: #fff;
   outline: 0;
-  box-shadow: 0 0 0 0 transparent,
-    0 0.375rem 0.625rem -0.3125rem rgba(118, 109, 244, 0.15);
 }
 .form-control::-webkit-date-and-time-value {
   height: 1.5em;
@@ -4157,12 +4153,55 @@ textarea.form-control-lg {
   transform: scale(0.85) translateY(-0.5rem) translateX(0.15rem);
 }
 
+.follower-count {
+  margin-left: 125px;
+}
+
+.search-results {
+  top: 60px;
+  width: 277.81px;
+  display: flex;
+  flex-direction: column;
+  max-height: 185px;
+  background-color: rgb(248 250 252);
+  overflow: scroll;
+}
+
+.search-button {
+  display: inline-block;
+  font-weight: 500;
+  line-height: 1.5;
+  color: #fff;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+  background-color: #7e22ce;
+  border: 1px solid #7e22ce;
+  padding: 0.5625rem 1.25rem;
+  font-size: 1rem;
+  border-radius: 0.75rem;
+  transition: color 0.25s ease-in-out, background-color 0.25s ease-in-out,
+    border-color 0.25s ease-in-out;
+}
+
+.search-button {
+  cursor: default;
+}
+
 .input-group {
   position: relative;
   display: flex;
   flex-wrap: wrap;
   align-items: stretch;
   width: 100%;
+  box-shadow: 0 0 0 0 transparent,
+  0 0.375rem 0.625rem -0.3125rem rgba(118, 109, 244, 0.15),
+  0 -0.375rem 0.625rem -0.3125rem rgba(118, 109, 244, 0.15),
+  -0.5rem 0rem 0.625rem -0.3125rem rgba(118, 109, 244, 0.15);
 }
 .input-group > .form-control,
 .input-group > .form-select {
@@ -5353,7 +5392,7 @@ fieldset:disabled .btn {
 .dropdown-item {
   display: block;
   width: 100%;
-  padding: 0.425rem 1.3rem;
+  padding: 0.5rem 1.3rem;
   clear: both;
   font-weight: 400;
   color: #5a5b75;
@@ -16154,6 +16193,14 @@ div.code-toolbar > .toolbar > .toolbar-item > button:hover {
   transition-property: transform, opacity;
 }
 
+.masonry-grid-item-fixed {
+  width: 300px;
+  float: left;
+  padding-right: 0.9375rem;
+  padding-left: 0.9375rem;
+  padding-bottom: 1.875rem;
+}
+
 .masonry-grid[data-columns] .masonry-grid-item {
   width: 100%;
   float: left;
@@ -16954,7 +17001,7 @@ input[type="search"]::-webkit-search-results-decoration {
 }
 
 .btn-icon {
-  padding: 0.5625rem 0.7875rem;
+  padding: 0.425rem 0.7875rem 0.5265rem 0.7875rem;
 }
 
 .btn-market {
@@ -19574,6 +19621,11 @@ a.card-body:hover {
   overflow: hidden;
   -webkit-mask-image: -webkit-radial-gradient(white, black);
 }
+
+.pointer-hover:hover {
+  cursor: pointer;
+}
+
 .card-slide .card-img {
   transition: transform 0.3s ease-in-out;
 }
@@ -21697,6 +21749,59 @@ html:not([dir="rtl"]) .range-slider-ui.noUi-horizontal .noUi-handle {
   height: 1.5rem;
   margin: 0 0.75rem;
   background-color: #e9e9f2;
+}
+
+.post-owner:hover {
+  color: black;
+  text-decoration: none;
+}
+
+.even-columns{
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: auto; 
+  /* position: relative; */
+  bottom: 0;
+}
+
+@media (min-width: 250px) {
+  .even-columns>*{
+    padding: 10px 10px 10px 10px;
+    flex-basis: 100%;
+    margin-top: auto;
+  }
+}
+
+@media (min-width: 550px) {
+  .even-columns>*{
+    padding: 10px 10px 10px 10px;
+    flex-basis: 50%;
+    margin-top: auto;
+  }
+}
+
+@media (min-width: 800px) {
+  .even-columns>*{
+    padding: 10px 10px 10px 10px;
+    flex-basis: 33.33%;
+    margin-top: auto;
+  }
+}
+
+@media (min-width: 1050px) {
+  .even-columns>*{
+    padding: 10px 10px 10px 10px;
+    flex-basis: 25%;
+    margin-top: auto;
+  }
+}
+
+@media (min-width: 1400px) {
+  .even-columns>*{
+    padding: 10px 10px 10px 10px;
+    flex-basis: 20%;
+    margin-top: auto;
+  }
 }
 
 .product-gallery {
