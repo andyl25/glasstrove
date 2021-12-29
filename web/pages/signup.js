@@ -84,7 +84,7 @@ function Signup() {
             </div>
             <button
               type="button"
-              class="btn btn-secondary w-full rounded-lg"
+              class="btn btn-secondary w-full rounded-lg mt-3"
               onClick={() =>
                 signup({
                   variables: { email: email, username: username, password1: password1, password2: password2 },

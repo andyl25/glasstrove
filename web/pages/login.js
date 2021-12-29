@@ -52,7 +52,7 @@ function Login() {
             </div>
             <button
               type="button"
-              class="btn btn-secondary w-full rounded-lg"
+              class="btn btn-secondary w-full rounded-lg mt-3"
               onClick={() =>
                 login({
                   variables: { username: username, password: password },
