@@ -79,10 +79,13 @@ function Header() {
               {data.searchUsers.map((user) => (
                 <a
                   href={"/" + user.username}
-                  class="dropdown-item flex flex-row"
+                  class="dropdown-item flex flex-row justify-between search-result"
                 >
-                  {user.username}
-                  <p className="follower-count"> {user.numfollowers} Followers</p>
+                  <p> {user.username}</p>
+                  <p className="follower-count">
+                    {" "}
+                    {user.numfollowers} Followers
+                  </p>
                 </a>
               ))}
             </div>
