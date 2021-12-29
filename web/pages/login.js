@@ -26,7 +26,7 @@ function Login() {
     <div className="flex flex-col min-h-screen overflow-hidden">
       <Header />
       <main className="flex-grow pt-40 w-1/4">
-        <div class="form-card text-white card-shadow w-96 absolute left-1/2 -ml-48">
+        <div class="form-card text-white card-shadow rounded-md">
           <div class="card-body">
             <div class="mb-3">
               <label for="text-input" class="form-label-sm">
@@ -52,7 +52,7 @@ function Login() {
             </div>
             <button
               type="button"
-              class="btn btn-secondary w-full"
+              class="btn btn-secondary w-full rounded-lg"
               onClick={() =>
                 login({
                   variables: { username: username, password: password },
