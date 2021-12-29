@@ -83,7 +83,6 @@ function Header() {
                 >
                   <p> {user.username}</p>
                   <p className="follower-count">
-                    {" "}
                     {user.numfollowers} Followers
                   </p>
                 </a>
