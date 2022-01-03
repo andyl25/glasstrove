@@ -14,6 +14,7 @@ const PICTURE = gql`
       order,
       imageUrl,
       size,
+      description,
       owner {
         username,
         numfollowers
@@ -84,7 +85,7 @@ function Home() {
                   </ul>
 
                   <h3 class="h5 mt-4 mb-1"> Description </h3>
-                  <p class="fs-sm mb-4 pb-2">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi.</p>
+                  <p class="fs-sm mb-4 pb-2">{data.specificPost[0].description}</p>
 
 
                   <h3 class="h5 mt-4 mb-1"> Creator </h3>
