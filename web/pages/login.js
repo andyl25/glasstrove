@@ -26,14 +26,14 @@ function Login() {
     <div className="flex flex-col min-h-screen overflow-hidden">
       <Header />
       <main className="flex-grow pt-40 w-1/4">
-        <div class="card text-white bg-dark card-shadow">
+        <div class="form-card text-white card-shadow rounded-md">
           <div class="card-body">
             <div class="mb-3">
               <label for="text-input" class="form-label-sm">
                 Username
               </label>
               <input
-                class="form-control"
+                class="form-control input-field"
                 id="text-input"
                 value={username}
                 onChange={(event) => setUsername(event.target.value)}
@@ -44,7 +44,7 @@ function Login() {
                 Password
               </label>
               <input
-                class="form-control password"
+                class="form-control password input-field"
                 id="pass-input"
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
@@ -52,7 +52,7 @@ function Login() {
             </div>
             <button
               type="button"
-              class="btn btn-secondary w-full"
+              class="btn btn-secondary w-full rounded-lg mt-3"
               onClick={() =>
                 login({
                   variables: { username: username, password: password },
