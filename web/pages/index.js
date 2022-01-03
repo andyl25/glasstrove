@@ -53,7 +53,7 @@ function Home() {
         let scrollTop = event.target.documentElement.scrollTop;
         if (document.getElementById("grid")) {
           let gridHeight = document.getElementById("grid").clientHeight;
-          if (scrollTop + window.innerHeight > gridHeight) {
+          if (scrollTop + window.innerHeight > gridHeight && data.feed.length >= num_results) {
             num_results += 15;
             refetch({ numresults: num_results });
           }
