@@ -21849,7 +21849,7 @@ html:not([dir="rtl"]) .range-slider-ui.noUi-horizontal .noUi-handle {
   text-decoration: none;
 }
 
-.even-columns{
+.even-columns-feed{
   display: flex;
   flex-wrap: wrap;
   margin-top: auto; 
@@ -21858,7 +21858,7 @@ html:not([dir="rtl"]) .range-slider-ui.noUi-horizontal .noUi-handle {
 }
 
 @media (min-width: 250px) {
-  .even-columns>*{
+  .even-columns-feed>*{
     padding: 10px 10px 10px 10px;
     flex-basis: 100%;
     margin-top: auto;
@@ -21866,7 +21866,7 @@ html:not([dir="rtl"]) .range-slider-ui.noUi-horizontal .noUi-handle {
 }
 
 @media (min-width: 550px) {
-  .even-columns>*{
+  .even-columns-feed>*{
     padding: 10px 10px 10px 10px;
     flex-basis: 50%;
     margin-top: auto;
@@ -21874,7 +21874,7 @@ html:not([dir="rtl"]) .range-slider-ui.noUi-horizontal .noUi-handle {
 }
 
 @media (min-width: 800px) {
-  .even-columns>*{
+  .even-columns-feed>*{
     padding: 10px 10px 10px 10px;
     flex-basis: 33.33%;
     margin-top: auto;
@@ -21882,7 +21882,7 @@ html:not([dir="rtl"]) .range-slider-ui.noUi-horizontal .noUi-handle {
 }
 
 @media (min-width: 1050px) {
-  .even-columns>*{
+  .even-columns-feed>*{
     padding: 10px 10px 10px 10px;
     flex-basis: 25%;
     margin-top: auto;
@@ -21890,7 +21890,7 @@ html:not([dir="rtl"]) .range-slider-ui.noUi-horizontal .noUi-handle {
 }
 
 @media (min-width: 1400px) {
-  .even-columns>*{
+  .even-columns-feed>*{
     padding: 10px 10px 10px 10px;
     flex-basis: 20%;
     margin-top: auto;

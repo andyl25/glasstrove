@@ -39,10 +39,10 @@ function debounce(func, wait) {
     timeout = setTimeout(later, wait);
   };
 };
+let num_results = 15;
 
 function Home() {
   const router = useRouter();
-  let num_results = 15;
   const { loading, error, data, refetch } = useQuery(FEED, {
     variables: { numresults: num_results },
   });
@@ -53,6 +53,8 @@ function Home() {
         let scrollTop = event.target.documentElement.scrollTop;
         if (document.getElementById("grid")) {
           let gridHeight = document.getElementById("grid").clientHeight;
+          console.log(data.feed.length)
+          console.log(num_results)
           if (scrollTop + window.innerHeight > gridHeight && data.feed.length >= num_results) {
             num_results += 15;
             refetch({ numresults: num_results });
@@ -90,7 +92,7 @@ function Home() {
             <section class="container overflow-hidden py-5 py-md-6 py-lg-7">
               <div>
                 <div>
-                  <div className="even-columns" id="grid">
+                  <div className="even-columns-feed" id="grid">
                     {data.feed.map((post) => (
                       <div class="masonry-grid-item-fixed pb-20 pr-6 pl-6">
                         <div class="card card-curved-body shadow card-slide">
