@@ -90,7 +90,7 @@ function Home() {
 
                   <h3 class="h5 mt-4 mb-1"> Creator </h3>
                   <ul class="list-unstyled fs-md mb-4 pb-2">
-                    <li class="mb-1">Name:<span class="fw-medium text-nav ms-2">Placeholder</span></li>
+                    <li class="mb-1">Name:<span class="fw-medium text-nav ms-2">{data.specificPost[0].title}</span></li>
                   </ul>
 
                 </div>
