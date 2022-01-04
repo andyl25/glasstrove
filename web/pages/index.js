@@ -107,14 +107,14 @@ function Home() {
                               src={post.imageUrl}
                               alt={post.title}
                             />
-                            <a
+                            <div
                               class="card-body text-center"
-                              href={"/post/" + post.id}
+                              // href={"/post/" + post.id}
                             >
                               <h3 class="h5 nav-heading mt-1 mb-2">
                                 {post.title}
                               </h3>
-                            </a>
+                            </div>
                           </div>
                         </div>
                         <div>
