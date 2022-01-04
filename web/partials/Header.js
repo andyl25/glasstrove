@@ -119,6 +119,15 @@ function Header() {
                 </a>
                 {/* </Link> */}
               </li>
+              <li className="">
+                {/* <Link href="/"> */}
+                <a className="group hover:no-underline" href="/wallets">
+                  <a className="no-underline font-semibold text-gray-500 text-lg items-center group-hover:text-gray-700 hover:no-underline transition duration-150 ease-in-out">
+                    Wallets
+                  </a>
+                </a>
+                {/* </Link> */}
+              </li>
             </ul>
           </nav>
         </div>
