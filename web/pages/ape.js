@@ -88,21 +88,6 @@ const Ape = () => {
       }
       )}
       );
-
-
-      
-      // window.ethereum.enable().then((address) => {userAddress = address});
-      // web3.eth.defaultAccount = userAddress;
-      // web3.eth.getCoinbase().then((address) => {publicAddress = address});
-      // console.log(publicAddress)
-      //  new Promise((resolve, reject) => web3.eth.personal.sign(
-      //   web3.utils.fromUtf8(data.me.nonce),
-      //   userAddress,
-      //   (err, signature) => {
-      //     if (err) return reject(err);
-      //     console.log( resolve({ publicAddress, signature }));
-      //   }
-      //   ));
     }
   })
   return <div>{!loading && !error && (

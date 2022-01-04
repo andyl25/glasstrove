@@ -22305,3 +22305,5 @@ html:not([dir="rtl"]) .range-slider-ui.noUi-horizontal .noUi-handle {
   flex-basis: 25%;
   /* margin-top: auto;  */
 }
+
+.bn-onboard-custom.bn-onboard-modal { z-index: 99; }
