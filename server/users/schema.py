@@ -169,7 +169,10 @@ class DeleteWallet(graphene.Mutation):
             return DeleteWallet(ok = False, err = "not authenticated")
         if not(user_instance in wallet_to_delete.owner.all()):
             return DeleteWallet(ok = False, err = "user does not own wallet")
+        wall_address = wallet_to_delete.address
         wallet_to_delete.delete()
+        del_posts = Post.objects.filter(wallet = wall_address)
+        del_posts.all().delete()
         
         return DeleteWallet(ok = True)
 
