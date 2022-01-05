@@ -17,3 +17,4 @@ class Post(models.Model):
     profile_pic = models.BooleanField(blank = False, default=False)
     post_token_id = models.CharField(max_length=300, blank = False, default="1")
     post_asset_contract = models.CharField(max_length=600, blank = False, default="1")
+    creator = models.CharField(max_length=600, blank = True, default="No Creator")
