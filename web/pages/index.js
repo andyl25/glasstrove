@@ -26,48 +26,62 @@ const FEED = gql`
   }
 `;
 
+const ME = gql`
+  query {
+    me {
+      username
+    }
+  }
+`;
+
 function debounce(func, wait) {
   let timeout;
-  return function() {
+  return function () {
     const context = this;
     const args = arguments;
-    const later = function() {
+    const later = function () {
       timeout = null;
       func.apply(context, args);
     };
     clearTimeout(timeout);
     timeout = setTimeout(later, wait);
   };
-};
+}
 let num_results = 15;
 
 function Home() {
   const router = useRouter();
+  const meQuery = useQuery(ME);
   const { loading, error, data, refetch } = useQuery(FEED, {
     variables: { numresults: num_results },
   });
-  
+
   useEffect(() => {
     if (!loading && !error) {
-      window.addEventListener("scroll", debounce((event) => {
-        let scrollTop = event.target.documentElement.scrollTop;
-        if (document.getElementById("grid")) {
-          let gridHeight = document.getElementById("grid").clientHeight;
-          console.log(data.feed.length)
-          console.log(num_results)
-          console.log(scrollTop + window.innerHeight > gridHeight)
-          if (scrollTop + window.innerHeight > gridHeight && data.feed.length >= num_results) {
-            num_results += 15;
-            refetch({ numresults: num_results });
+      window.addEventListener(
+        "scroll",
+        debounce((event) => {
+          let scrollTop = event.target.documentElement.scrollTop;
+          if (document.getElementById("grid")) {
+            let gridHeight = document.getElementById("grid").clientHeight;
+            console.log(data.feed.length);
+            console.log(num_results);
+            if (
+              scrollTop + window.innerHeight > gridHeight &&
+              data.feed.length >= num_results
+            ) {
+              num_results += 15;
+              refetch({ numresults: num_results });
+            }
           }
-        }
-      }, 100));
+        }, 100)
+      );
     }
   });
 
   return (
     <div>
-      {!loading && error && (
+      {meQuery.error || (!meQuery.loading && meQuery.data.me == null) && (
         <div className="flex flex-col min-h-screen overflow-hidden">
           {/*  Site header */}
           <Header />

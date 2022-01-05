@@ -5186,6 +5186,24 @@ fieldset:disabled .btn {
   border-radius: 1rem;
 }
 
+.get-started-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-width: 1px;
+  border-color: transparent;
+  font-weight: 500;
+  line-height: 1.375;
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  border-radius: 0.75rem;
+  background-color: black;
+}
+
+.get-started-button:hover {
+  background-color: #7E22CE;
+}
+
 .btn-sm,
 .btn-group-sm > .btn {
   padding: 0.425rem 1rem;
