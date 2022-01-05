@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import "tailwindcss/tailwind.css";
-import { gql, useLazyQuery } from "@apollo/client";
+import { gql, useQuery, useLazyQuery } from "@apollo/client";
 import { useRouter } from "next/router";
 
 const SEARCH = gql`
@@ -13,10 +13,19 @@ const SEARCH = gql`
   }
 `;
 
+const ME = gql`
+  query {
+    me {
+      username
+    }
+  }
+`;
+
 function Header() {
   const router = useRouter();
   const [top, setTop] = useState(true);
   const [searchText, setSearchText] = useState("");
+  const meQuery = useQuery(ME);
   const [loadSearch, { called, loading, data, error }] = useLazyQuery(SEARCH);
 
   // detect whether user has scrolled the page down by 10px
@@ -91,44 +100,83 @@ function Header() {
           )}
           {/* Site navigation */}
           <nav className="flex flex-grow">
-            <ul className="flex flex-grow justify-end flex-wrap items-center space-x-6">
-              <li className="">
-                {/* <Link href="/"> */}
-                <a className="group hover:no-underline" href="/">
-                  <a className="no-underline font-semibold text-gray-500 text-lg items-center group-hover:text-gray-700 hover:no-underline transition duration-150 ease-in-out">
-                    Home
+            {!meQuery.loading && !meQuery.error && meQuery.data.me != null && (
+              <ul className="flex flex-grow justify-end flex-wrap items-center space-x-6">
+                <li className="">
+                  {/* <Link href="/"> */}
+                  <a className="group hover:no-underline" href="/">
+                    <a className="no-underline font-semibold text-gray-500 text-lg items-center group-hover:text-gray-700 hover:no-underline transition duration-150 ease-in-out">
+                      Home
+                    </a>
                   </a>
-                </a>
-                {/* </Link> */}
-              </li>
-              <li className="">
-                {/* <Link href="/"> */}
-                <a className="group hover:no-underline" href="/">
-                  <a className="no-underline font-semibold text-gray-500 text-lg items-center group-hover:text-gray-700 hover:no-underline transition duration-150 ease-in-out">
-                    Profile
+                  {/* </Link> */}
+                </li>
+                <li className="">
+                  {/* <Link href="/"> */}
+                  <a
+                    className="group hover:no-underline"
+                    href={"/" + meQuery.data.me.username}
+                  >
+                    <a className="no-underline font-semibold text-gray-500 text-lg items-center group-hover:text-gray-700 hover:no-underline transition duration-150 ease-in-out">
+                      Profile
+                    </a>
                   </a>
-                </a>
-                {/* </Link> */}
-              </li>
-              <li className="">
-                {/* <Link href="/"> */}
-                <a className="group hover:no-underline" href="/">
-                  <a className="no-underline font-semibold text-gray-500 text-lg items-center group-hover:text-gray-700 hover:no-underline transition duration-150 ease-in-out">
-                    Edit
+                  {/* </Link> */}
+                </li>
+                <li className="">
+                  {/* <Link href="/"> */}
+                  <a className="group hover:no-underline" href="/edit">
+                    <a className="no-underline font-semibold text-gray-500 text-lg items-center group-hover:text-gray-700 hover:no-underline transition duration-150 ease-in-out">
+                      Edit
+                    </a>
                   </a>
-                </a>
-                {/* </Link> */}
-              </li>
-              <li className="">
-                {/* <Link href="/"> */}
-                <a className="group hover:no-underline" href="/wallets">
-                  <a className="no-underline font-semibold text-gray-500 text-lg items-center group-hover:text-gray-700 hover:no-underline transition duration-150 ease-in-out">
-                    Wallets
+                  {/* </Link> */}
+                </li>
+                <li className="">
+                  {/* <Link href="/"> */}
+                  <a className="group hover:no-underline" href="/wallets">
+                    <a className="no-underline font-semibold text-gray-500 text-lg items-center group-hover:text-gray-700 hover:no-underline transition duration-150 ease-in-out">
+                      Wallets
+                    </a>
                   </a>
-                </a>
-                {/* </Link> */}
-              </li>
-            </ul>
+                  {/* </Link> */}
+                </li>
+              </ul>
+            )}
+            {meQuery.loading ||
+              meQuery.error ||
+              (meQuery.data.me == null && (
+                <ul className="flex flex-grow justify-end flex-wrap items-center space-x-6">
+                  <li className="">
+                    {/* <Link href="/"> */}
+                    <a className="group hover:no-underline" href="/">
+                      <a className="no-underline font-semibold text-gray-500 text-lg items-center group-hover:text-gray-700 hover:no-underline transition duration-150 ease-in-out">
+                        Home
+                      </a>
+                    </a>
+                    {/* </Link> */}
+                  </li>
+                  <li className="">
+                    {/* <Link href="/"> */}
+                    <a className="group hover:no-underline" href="/login">
+                      <a className="no-underline font-semibold text-gray-500 text-lg items-center group-hover:text-gray-700 hover:no-underline transition duration-150 ease-in-out">
+                        Log In
+                      </a>
+                    </a>
+                    {/* </Link> */}
+                  </li>
+                  <li className="">
+                    {/* <Link href="/"> */}
+                    <a className="group hover:no-underline" href="/signup">
+                      {/* <a className="no-underline font-semibold text-gray-500 text-lg items-center group-hover:text-gray-700 hover:no-underline transition duration-150 ease-in-out"> */}
+                      <a className="no-underline hover:no-underline group-hover:text-white transition duration-500 ease-in-out text-gray-200 get-started-button">
+                        Get Started
+                      </a>
+                    </a>
+                    {/* </Link> */}
+                  </li>
+                </ul>
+              ))}
           </nav>
         </div>
       </div>
