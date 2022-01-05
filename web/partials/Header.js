@@ -170,7 +170,7 @@ function Header() {
                     <a className="group hover:no-underline" href="/signup">
                       {/* <a className="no-underline font-semibold text-gray-500 text-lg items-center group-hover:text-gray-700 hover:no-underline transition duration-150 ease-in-out"> */}
                       <a className="no-underline hover:no-underline group-hover:text-white transition duration-500 ease-in-out text-gray-200 get-started-button">
-                        Get Started
+                        Sign Up
                       </a>
                     </a>
                     {/* </Link> */}
