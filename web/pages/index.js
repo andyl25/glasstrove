@@ -8,7 +8,7 @@ import HeroHome from "../partials/HeroHome";
 // import Newsletter from '../partials/Newsletter';
 // import Footer from '../partials/Footer';
 import "tailwindcss/tailwind.css";
-import { gql, useMutation, useQuery } from "@apollo/client";
+import { gql, useMutation, useQuery, NetworkStatus } from "@apollo/client";
 import { useRouter } from "next/router";
 
 const FEED = gql`
@@ -55,6 +55,7 @@ function Home() {
           let gridHeight = document.getElementById("grid").clientHeight;
           console.log(data.feed.length)
           console.log(num_results)
+          console.log(scrollTop + window.innerHeight > gridHeight)
           if (scrollTop + window.innerHeight > gridHeight && data.feed.length >= num_results) {
             num_results += 15;
             refetch({ numresults: num_results });

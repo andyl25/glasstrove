@@ -406,7 +406,7 @@ function Home() {
             </div>
             </section>)}
 
-            <div>{loading && <div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>}</div>
+            <div>{loading &&<div class="lds-ring"><div></div><div></div><div></div><div></div></div>}</div>
             <div>{error && 'Error...'}</div>
         </main>
         

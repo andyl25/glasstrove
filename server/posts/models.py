@@ -9,6 +9,7 @@ class Post(models.Model):
     image_url = models.URLField(blank=True, null=True)
     order = models.IntegerField(blank=True, null=True)
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='posts')
+    wallet = models.CharField(max_length=300, blank = False, default="0x000000123456")
     posted_date = models.DateTimeField(blank=True, null=True)
     x_pos = models.IntegerField(blank = True, null=True)
     y_pos = models.IntegerField(blank = True, null=True)
