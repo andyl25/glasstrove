@@ -20,7 +20,8 @@ from django.contrib.auth.decorators import login_required
 class PostType(DjangoObjectType):
     class Meta:
         model = Post
-        fields = ("id", "title", "owner", "order", "image_url", "x_pos", "y_pos", "size", "description", "external_link", "post_token_id", "post_asset_contract", "posted_date")
+        fields = ("id", "title", "owner", "order", "image_url", "x_pos", "y_pos", "size", "description", 
+            "external_link", "post_token_id", "post_asset_contract", "posted_date", "wallet")
 
 # class AddPost(graphene.Mutation):
 #     class Arguments:
@@ -90,12 +91,13 @@ class AddPosts(graphene.Mutation):
                             if not Post.objects.filter(owner=user_instance).all():
                                 new_post = Post(image_url = i["image_url"], title = i["name"], description = i["description"], 
                                     external_link = i["external_link"], owner = info.context.user, post_token_id = i["token_id"], 
-                                    post_asset_contract = i["asset_contract"]["address"], order = 1, posted_date = datetime.datetime.now())
+                                    post_asset_contract = i["asset_contract"]["address"], order = 1, posted_date = datetime.datetime.now(), wallet=api_address)
                                 new_post.save()
                             else:
                                 new_post = Post(image_url = i["image_url"], title = i["name"], description = i["description"], 
                                     external_link = i["external_link"], owner = info.context.user, post_token_id = i["token_id"], 
-                                    post_asset_contract = i["asset_contract"]["address"], order = Post.objects.filter(owner=user_instance).all().order_by('order')[:1][0].order + 1, posted_date = datetime.datetime.now())
+                                    post_asset_contract = i["asset_contract"]["address"], order = Post.objects.filter(owner=user_instance).all().order_by('-order')[:1][0].order + 1, 
+                                    posted_date = datetime.datetime.now(), wallet=api_address)
                                 new_post.save()
                         # print(i)
             else:
@@ -112,12 +114,12 @@ class AddPosts(graphene.Mutation):
                         if not Post.objects.filter(owner=user_instance).all():
                             new_post = Post(image_url = i["image_url"], title = i["name"], description = i["description"], 
                                 external_link = i["external_link"], owner = info.context.user, post_token_id = i["token_id"], 
-                                post_asset_contract = i["asset_contract"]["address"], order = 1, posted_date = datetime.datetime.now())
+                                post_asset_contract = i["asset_contract"]["address"], order = 1, posted_date = datetime.datetime.now(), wallet=api_address)
                             new_post.save()
                         else:
                             new_post = Post(image_url = i["image_url"], title = i["name"], description = i["description"], 
                                 external_link = i["external_link"], owner = info.context.user, post_token_id = i["token_id"], 
-                                post_asset_contract = i["asset_contract"]["address"], order = Post.objects.filter(owner=user_instance).all().order_by('order')[:1][0].order + 1, posted_date = datetime.datetime.now())
+                                post_asset_contract = i["asset_contract"]["address"], order = Post.objects.filter(owner=user_instance).all().order_by('-order')[:1][0].order + 1, posted_date = datetime.datetime.now(), wallet=api_address)
                             new_post.save()
                     # print(i)
 
@@ -177,7 +179,12 @@ class ReorderPosts(graphene.Mutation):
              count += 1
         return ReorderPosts(ok=True, posts = posts)
 
-
+class deleteAll(graphene.Mutation):
+    ok = graphene.Boolean()
+    
+    def mutate(root, info):
+        Post.objects.all().delete()
+        return deleteAll(ok=True)
 
 class deletePost(graphene.Mutation):
     class Arguments:
@@ -201,23 +208,79 @@ class deletePost(graphene.Mutation):
         return deletePost(ok=True)
 
 class Query(graphene.ObjectType):
-    post_list = graphene.List(PostType, username=graphene.String(), numresults = graphene.Int())
+    post_list = graphene.List(PostType, username=graphene.String(), offset = graphene.Int(),numresults = graphene.Int())
     specific_post = graphene.List(PostType, id = graphene.Int())
     profile_pic = graphene.List(PostType, username=graphene.String())
     feed = graphene.List(PostType, numresults=graphene.Int())
+
     def resolve_profile_pic(root, info, username):
         user_owner = User.objects.get(username = username)
         pp = Post.objects.filter(owner = user_owner)
         return pp.filter(profile_pic=True)
-    def resolve_post_list(root, info, username, numresults=None):
+    
+    def resolve_post_list(root, info, username, offset = 0, numresults=15):
         user_owner = User.objects.get(username = username)
-        posts = Post.objects.filter(owner = user_owner)
-        if(numresults == None):
-            return posts.filter(profile_pic=False).order_by('order')
-        return posts.filter(profile_pic=False).order_by('order')[:numresults]
+        posts = Post.objects.filter(owner = user_owner).order_by('order')[:numresults]
+        # num_wallets = user_owner.wallets.count()
+        if(posts.count()-15<0):
+            posts_to_check = posts
+        else:
+            posts_to_check = posts[posts.count()-15:]
+        for wallet in user_owner.wallets.all():
+            address = wallet.address
+            posts_with_wallet = [p for p in posts_to_check if p.wallet==address]
+
+            # posts_with_wallet = posts.filter(wallet = address)
+            if(len(posts_with_wallet) == 0):
+                continue
+            
+            uri = "https://api.opensea.io/api/v1/assets?owner={}".format(address)
+            # temp_post_arr = []
+            for post_check in posts_to_check:
+                if (post_check.wallet==address):
+                    # temp_post_arr.append(post_check)
+                    uri += "&asset_contract_addresses={}".format(post_check.post_asset_contract)
+                    uri += "&token_ids={}".format(post_check.post_token_id)
+            uri += "&offset=0&limit=30"
+            
+            response = requests.request("GET", uri)
+            
+            for individual_post in posts_with_wallet:
+                check = False
+                for response_post in (response.json()["assets"]):
+                    if(individual_post.post_token_id == response_post["token_id"] and
+                        individual_post.post_asset_contract == response_post["asset_contract"]["address"]):
+                        check = True
+                if(check == False):
+                    individual_post.delete()
+        
+        # uri = "https://api.opensea.io/api/v1/assets?"
+        # for post_check in posts.all():
+        #     uri += "&asset_contract_addresses={}".format(post_check.post_asset_contract)
+        #     uri += "&token_ids={}".format(post_check.post_token_id)
+        # uri += "&offset=0&limit=30"
+        # response = requests.request("GET", uri)
+        # print(uri)
+        # for individual_post in posts.all():
+        #     check = False
+        #     for response_post in (response.json()["assets"]):
+        #         if(individual_post.post_token_id == response_post["token_id"] and
+        #             individual_post.post_asset_contract == response_post["asset_contract"]["address"] and
+        #             individual_post.wallet == response_post["owner"]["address"]):
+        #             check = True
+        #             break
+        #     if(check == False):
+        #         individual_post.delete()
+        for i in posts:
+            if i is None:
+                i.delete()
+        
+        return posts
+    
     def resolve_specific_post(root, info, id):
         posts = Post.objects.filter(id = id)
         return posts
+    
     def resolve_feed(root, info, numresults=None):
         query = Q()
         for person in info.context.user.following.all():
@@ -230,6 +293,7 @@ class Mutation(graphene.ObjectType):
     edit_post = EditPost.Field()
     delete_post = deletePost.Field()
     reorder_posts = ReorderPosts.Field()
+    delete_all = deleteAll.Field()
 
 
 
