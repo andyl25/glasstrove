@@ -8,7 +8,7 @@ import HeroHome from "../partials/HeroHome";
 // import Newsletter from '../partials/Newsletter';
 // import Footer from '../partials/Footer';
 import "tailwindcss/tailwind.css";
-import { gql, useMutation, useQuery } from "@apollo/client";
+import { gql, useMutation, useQuery, NetworkStatus } from "@apollo/client";
 import { useRouter } from "next/router";
 
 const FEED = gql`

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 
 import Header from "../partials/Header";
 import "tailwindcss/tailwind.css";
@@ -9,21 +9,24 @@ import imagesLoaded from "imagesloaded";
 
 // change to postList with specific number of posts to get
 const PROFILE = gql`
-  query Profile($username: String!) {
+  query Profile($username: String!, $numresults: Int!) {
     specificUser(username: $username) {
       username
       numfollowers
-      posts {
-        id
-        title
-        order
-        imageUrl
-        size
-        description
-      }
+    }
+    postList(username: $username,  numresults: $numresults){
+      id,
+      title,
+      order,
+      imageUrl,
+      size,
+      description,
+      postTokenId,
     }
   }
 `;
+
+
 
 const ME = gql`
   query {
@@ -43,15 +46,61 @@ const FOLLOW = gql`
     }
   }
 `;
+function debounce(func, wait) {
+  let timeout;
+  return function() {
+    const context = this;
+    const args = arguments;
+    const later = function() {
+      timeout = null;
+      func.apply(context, args);
+    };
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+};
 
+let num_results = 15
 function Home() {
-  const router = useRouter();
+  const router = useRouter()
+  
   const { username } = router.query;
-  const { loading, error, data, refetch } = useQuery(PROFILE, {
-    variables: { username },
+  
+  
+  const [isLoaded, setIsLoaded] = useState(false)
+  const [isError, setIsError] = useState(false)
+  const [nfts, setNfts] = useState([])
+  const [pageNumber, setPageNumber] = useState(0)
+  const [hasMore, setHasMore] = useState(true)
+  const { loading, error, data, refetch, networkStatus } = useQuery(PROFILE, {
+    variables: { username: username, numresults: num_results},
   });
   const meQuery = useQuery(ME);
   const [follow] = useMutation(FOLLOW);
+  useEffect(()=>{
+    setIsLoaded(true)
+  }, [loading])
+
+  useEffect(() => {
+    if (!loading && !error) {
+      window.addEventListener("scroll", debounce((event) => {
+        let scrollTop = event.target.documentElement.scrollTop;
+        if (document.getElementById("grid")) {
+          let gridHeight = document.getElementById("grid").clientHeight;
+          
+          if (scrollTop + window.innerHeight > gridHeight && data.postList.length >= num_results) {
+            console.log("====")
+            num_results += 15;
+            refetch({username: username, numresults: num_results })
+            
+            
+          }
+        }
+
+      }, 100));
+    }
+  });
+
   useEffect(() => {
     if (!loading && !error) {
       let grid = document.querySelectorAll(".masonry-grid"),
@@ -78,6 +127,34 @@ function Home() {
       router.replace('/')
     }
   });
+  
+
+  //fetch more assets
+  // useEffect(() => {
+  //   setIsLoading(true)
+  //   setIsError(false)
+  //   if(!data){return}
+  
+    
+  //   setNfts(prevNfts => {
+  //       return[...prevNfts, ...data.postList
+  //       ]
+  //   })
+
+  //   if(data.postList.length === 0){
+  //     setHasMore(false)
+  //   }
+  //   else{
+  //       setHasMore(true)
+  //   }
+    
+  //   // setHasMore(result.assets.length > 0)
+  //   console.log(nfts)
+  //   setIsLoading(false)
+
+    
+    
+  // }, [pageNumber, data])
 
   function handleFollow() {
     if (meQuery.data.me == null) {
@@ -132,6 +209,7 @@ function Home() {
           )}
           {!meQuery.loading &&
             !meQuery.error &&
+            (meQuery.data.me != null) &&
             !includesName(meQuery.data.me.following, username) && (
               <button
                 type="button"
@@ -143,6 +221,7 @@ function Home() {
             )}
           {!meQuery.loading &&
             !meQuery.error &&
+            (meQuery.data.me != null) &&
             includesName(meQuery.data.me.following, username) && (
               <button
                 type="button"
@@ -157,7 +236,8 @@ function Home() {
           <section class="container overflow-hidden py-5 py-md-6 py-lg-7">
             <div class="masonry-filterable">
               <div
-                class="masonry-grid"
+                className="masonry-grid" 
+                id="grid"
                 data-columns={
                   window.innerWidth > 1200
                     ? "4"
@@ -166,32 +246,39 @@ function Home() {
                     : "2"
                 }
               >
-                {data.specificUser.posts.map((post) => (
-                  <div class="masonry-grid-item" order={post.order}>
-                    <div class="card card-curved-body shadow card-slide">
-                      <div class="card-slide-inner">
-                        <img
-                          class="card-img"
-                          src={post.imageUrl}
-                          alt={post.title}
-                        />
-                        <a
-                          class="card-body text-center"
-                          href={"/post/" + post.id}
-                        >
-                          <h3 class="h5 nav-heading mt-1 mb-2">{post.title}</h3>
-                          <p class="fs-sm text-muted mb-1">{post.description}</p>
-                          {/* <p>{post.order}</p> */}
-                        </a>
+                {data.postList.map((post, index) => {
+
+                    return(
+                    <div class="masonry-grid-item" order={post.order}>
+                      <div class="card card-curved-body shadow card-slide">
+                        <div class="card-slide-inner">
+                          <img
+                            class="card-img"
+                            src={post.imageUrl}
+                            alt={post.title}
+                          />
+                          <a
+                            class="card-body text-center"
+                            href={"/post/" + post.id}
+                          >
+                            <h3 class="h5 nav-heading mt-1 mb-2">{post.title}</h3>
+                            <p class="fs-sm text-muted mb-1">{post.description}</p>
+                            {/* <p>{post.order}</p> */}
+                          </a>
+                        </div>
                       </div>
+                      {/* <div class="text-center py-3 pb-md-0" onClick={() => }>Load More</div> */}
                     </div>
-                    {/* <div class="text-center py-3 pb-md-0" onClick={() => }>Load More</div> */}
-                  </div>
-                ))}
+                    )
+                  }
+                )}
               </div>
             </div>
           </section>
         )}
+        {/* <div>{isLoading && loading && <div class="lds-ring"><div></div><div></div><div></div><div></div></div>}</div> */}
+        <div>{loading && <div class="lds-ring"><div></div><div></div><div></div><div></div></div>}</div>
+        <div>{!loading && data.postList.length >= num_results && <div class="lds-ring"><div></div><div></div><div></div><div></div></div>}</div>
       </main>
     </div>
   );

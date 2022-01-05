@@ -32,7 +32,7 @@ class AuthMutation(graphene.ObjectType):
 class UserType(DjangoObjectType):
     class Meta:
         model = User
-        fields = ("id", "username", "following", "numfollowers", "owned_post", "wallets", "posts", "nonce", "bio")
+        fields = ("id", "username", "following", "numfollowers", "owned_post", "wallets", "posts", "nonce", "bio", "user_status")
 
 
 class Login(graphene.Mutation):
@@ -169,7 +169,10 @@ class DeleteWallet(graphene.Mutation):
             return DeleteWallet(ok = False, err = "not authenticated")
         if not(user_instance in wallet_to_delete.owner.all()):
             return DeleteWallet(ok = False, err = "user does not own wallet")
+        wall_address = wallet_to_delete.address
         wallet_to_delete.delete()
+        del_posts = Post.objects.filter(wallet = wall_address)
+        del_posts.all().delete()
         
         return DeleteWallet(ok = True)
 
@@ -180,7 +183,7 @@ class Query(UserQuery, MeQuery, graphene.ObjectType):
         return User.objects.get(username = username)
     def resolve_search_users(root, info, searchstring, numresults):
         user_list = User.objects.filter(username__icontains=searchstring)
-        return user_list.order_by('numfollowers')[:numresults]
+        return user_list.order_by('-numfollowers')[:numresults]
 
 
 

@@ -15,6 +15,7 @@ const PICTURE = gql`
       imageUrl,
       size,
       description,
+      creator,
       owner {
         username,
         numfollowers
@@ -33,6 +34,23 @@ function Home() {
   useEffect(() => {
     if (!loading && !error) {
       console.log(data)
+    //   let grid = document.querySelectorAll(".masonry-grid"),
+    //     masonry;
+
+    //   if (grid === null) return;
+
+    //   for (let i = 0; i < grid.length; i++) {
+    //     masonry = new Shuffle(grid[i], {
+    //       itemSelector: ".masonry-grid-item",
+    //       sizer: ".masonry-grid-item",
+    //     });
+    //     masonry.layout();
+    //   }
+    }
+  });
+  useEffect(() => {
+    if (!loading && error) {
+      router.replace('/')
     //   let grid = document.querySelectorAll(".masonry-grid"),
     //     masonry;
 
@@ -90,7 +108,7 @@ function Home() {
 
                   <h3 class="h5 mt-4 mb-1"> Creator </h3>
                   <ul class="list-unstyled fs-md mb-4 pb-2">
-                    <li class="mb-1">Name:<span class="fw-medium text-nav ms-2">{data.specificPost[0].title}</span></li>
+                    <li class="mb-1">Name:<span class="fw-medium text-nav ms-2">{data.specificPost[0].creator}</span></li>
                   </ul>
 
                 </div>
