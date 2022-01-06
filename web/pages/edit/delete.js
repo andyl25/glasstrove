@@ -15,7 +15,6 @@ import imagesLoaded from "imagesloaded";
 import 'tailwindcss/tailwind.css'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
-
 const ME = gql`
   query {
     me {
@@ -31,16 +30,40 @@ const ME = gql`
     }
   }
 `;
+
+const REMOVEPOSTS = gql`
+  mutation deletePost($id: [Int!]){
+	deletePost(id:$id){
+		ok,
+	}
+}
+`;
 function Home() {
 
     const router = useRouter()
     const {loading, error, data, refetch} = useQuery(ME);
+    const [nfts, setNFTs] = useState([])
+    const [test, setTest] = useState(false)
+    const [remove] = useMutation(REMOVEPOSTS)
     function redirAdd() {
       router.push("/edit/add")
     }
     function redirReorder() {
       router.reload()
     }
+
+    useEffect(()=>{
+      if(!data){return;}
+      var tempData = JSON.parse(JSON.stringify(data));
+
+      console.log(data);
+      setNFTs([...tempData.me.posts.map(n=>{
+        n.selected = false;
+        return n;
+      })])
+      console.log(tempData)
+      console.log(nfts)
+    }, [data])
 
     useEffect(() => {
         if (!loading && !error) {
@@ -96,8 +119,8 @@ function Home() {
 
                             onClick = {redirReorder}
                         >
-                            <i class="ai-move pr-2 pt-0.5"></i>
-                            <h1 className="text-xl md:text-xl font-extrabold leading-tighter tracking-tighter" data-aos="zoom-y-out"><span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-indigo-500">Reorder Profile</span></h1>
+                            <i class="ai-delete pr-2 pt-0.5"></i>
+                            <h1 className="text-xl md:text-xl font-extrabold leading-tighter tracking-tighter" data-aos="zoom-y-out"><span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-indigo-500">Remove NFTs</span></h1>
                         </button>
                     </div>
                 </div>
@@ -111,20 +134,52 @@ function Home() {
             <div>
               <div class="even-columns-2 ">
                     <div class="even-columns-child-2 text-center pb-2 no-underline font-semibold text-gray-500 text-lg items-center group-hover:text-gray-700 space-x-5">
-                        <div class="add-padding font-bold">Drag and drop to reorder your posts, then save when you're ready</div>
+                        <div class="add-padding font-bold">Select individual NFTs or [Shift + Click] an entire row to remove</div>
                         
                     </div>
                 </div>
                 <div class="even-columns-2 ">
-                    <div class="even-columns-child-2 text-center pb-5 no-underline font-semibold text-gray-500 text-lg items-center group-hover:text-gray-700 space-x-5">
-                        
+                <div class="even-columns-child-2 text-center pb-5 no-underline font-semibold text-gray-500 text-lg items-center group-hover:text-gray-700 space-x-5">
+                        <button type="button" class="add-padding btn btn-translucent-dark-2 border-1"
+                            onClick = {()=> {
+                                    let to_remove = [];
+                                    for(let i in nfts){
+                                        if(nfts[i].selected){
+                                            to_remove.push(nfts[i].id);
+                                        }
+
+                                    }
+
+                                    
+                                    remove({
+                                        variables: { id: to_remove },
+                                        onCompleted(data) {
+                                        },
+                                      });
+                                    router.reload();
+                                    
+                                }
+                            }
+                        ><span className="bg-clip-text text-gray-500 font-medium">Remove Selected</span></button>
                         <button type="button" class="add-padding btn btn-translucent-dark-2 border-1"
                             onClick = {()=>{
-                                console.log(data)
+                                for(let i in nfts){
+                                    nfts[i].selected = false;
+                                    
+                                }
+                                setTest(!test);
+                            }}
+                        ><span className="bg-clip-text text-gray-500 font-medium">Deselect</span></button>
+                        <button type="button" class="add-padding btn btn-translucent-dark-2 border-1"
+                            onClick = {()=>{
+                                for(let i in nfts){
+                                    nfts[i].selected = true;
+                                    
+                                }
+                                setTest(!test);
                                 
                             }}
-                        ><span className="bg-clip-text text-gray-500 font-medium">Save!</span></button>
-
+                        ><span className="bg-clip-text text-gray-500 font-medium">Select All</span></button>
 
                     </div>
                     
@@ -133,16 +188,14 @@ function Home() {
             </section>)}
 
             
-            <DragDropContext>
+
               {!loading && !error && (
               
               
             <section class="container overflow-hidden py-5 py-md-6 py-lg-7">
               <div class="masonry-filterable">
-              <Droppable droppableId="masonry-grid">
-              {(provided) => (
                 <ul
-                  className="masonry-grid" {...provided.droppableProps}
+                  className="masonry-grid"
                   data-columns={
                     window.innerWidth > 1200
                       ? "4"
@@ -150,14 +203,50 @@ function Home() {
                       ? "3"
                       : "2"
                   }
-                  ref={provided.innerRef}
+                 
                 >
                   
-                    {data.me.posts.map((post, index) => (
-                      <Draggable key={post.id} draggableId={post.id} index={index}>
-                      {(provided) => (
-                        <li class="masonry-grid-item" order={post.order} ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
-                          <div class="card card-curved-body shadow card-slide">
+                    {nfts.map((post, index) => {
+                      if(post.selected === false){
+                        return(
+                          <li class="masonry-grid-item" order={post.order}>
+                            <div 
+                                class="card-2 card-curved-body border-0 card-slide shadow card-hover card-hover unselectable"
+                                onClick = { () => {
+                                    post.selected = !post.selected
+                                    setTest(!test);
+                                  }
+                                }
+                            >
+                              <div class="card-slide-inner">
+                                <img
+                                  class="card-img"
+                                  src={post.imageUrl}
+                                  alt={post.title}
+                                />
+                                <a
+                                  class="card-body text-center"
+                                >
+                                  <h3 class="h5 nav-heading mt-1 mb-2">{post.title}</h3>
+                                  {/* <p>{post.order}</p> */}
+                                </a>
+                              </div>
+                            </div>
+                            {/* <div class="text-center py-3 pb-md-0" onClick={() => }>Load More</div> */}
+                          </li>
+                      )
+                      }
+                      return(
+                        <li class="masonry-grid-item" order={post.order}>
+                          <div 
+                              class="card-2 card-curved-body border-0 card-slide shadow card-hover card-active unselectable"
+                              
+                              onClick = { () => {
+                                  post.selected = !post.selected
+                                  setTest(!test);
+                                }
+                              }
+                          >
                             <div class="card-slide-inner">
                               <img
                                 class="card-img"
@@ -166,33 +255,28 @@ function Home() {
                               />
                               <a
                                 class="card-body text-center"
-                                href={"/post/" + post.id}
                               >
                                 <h3 class="h5 nav-heading mt-1 mb-2">{post.title}</h3>
-                                <p class="fs-sm text-muted mb-1">DESCRIPTION</p>
                                 {/* <p>{post.order}</p> */}
                               </a>
                             </div>
                           </div>
                           {/* <div class="text-center py-3 pb-md-0" onClick={() => }>Load More</div> */}
                         </li>
-                      )}
-                      </Draggable>
-                    ))}
+                    )
+                    })}
                   
-                  {provided.placeholder}
+                  
                 </ul>
                 
-                )}
                 
-                </Droppable>
               </div>
             </section>
               
             
             
           )}
-          </DragDropContext>
+
         
         </main>
                
