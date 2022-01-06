@@ -22,7 +22,7 @@ const link = createHttpLink({
 const AuthLink = new ApolloLink((operation, forward) => {
   let token = cookie.load("csrftoken");
   if (token === undefined || token === null) {
-    fetch(`/csrf`, {
+    return fetch(`/csrf`, {
       credentials: "include",
     }).then((response) => {
       token = response.json().csrfToken;
