@@ -4,12 +4,14 @@ import Header from "../partials/Header";
 import "tailwindcss/tailwind.css";
 import { gql, useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
+import { Mixpanel } from "../utils/Mixpanel";
 
 const LOGIN = gql`
   mutation Login($username: String!, $password: String!) {
     login(username: $username, password: $password) {
       ok,
       user{
+        id,
         username,
       }
     }
@@ -58,6 +60,9 @@ function Login() {
                   variables: { username: username, password: password },
                   onCompleted(data) {
                     if (data.login.ok) {
+                      Mixpanel.identify(data.login.user.id);
+                      Mixpanel.track("Successful Login", {username: username});
+                      Mixpanel.people.set({username: username})              
                       router.push("/" + data.login.user.username);
                     }
                   },

@@ -6,6 +6,7 @@ import { gql, useMutation, useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
 import Shuffle from "../shuffle/shuffle";
 import imagesLoaded from "imagesloaded";
+import { Mixpanel } from "../utils/Mixpanel";
 
 // change to postList with specific number of posts to get
 const PROFILE = gql`
@@ -14,19 +15,17 @@ const PROFILE = gql`
       username
       numfollowers
     }
-    postList(username: $username,  numresults: $numresults){
-      id,
-      title,
-      order,
-      imageUrl,
-      size,
-      description,
-      postTokenId,
+    postList(username: $username, numresults: $numresults) {
+      id
+      title
+      order
+      imageUrl
+      size
+      description
+      postTokenId
     }
   }
 `;
-
-
 
 const ME = gql`
   query {
@@ -48,56 +47,64 @@ const FOLLOW = gql`
 `;
 function debounce(func, wait) {
   let timeout;
-  return function() {
+  return function () {
     const context = this;
     const args = arguments;
-    const later = function() {
+    const later = function () {
       timeout = null;
       func.apply(context, args);
     };
     clearTimeout(timeout);
     timeout = setTimeout(later, wait);
   };
-};
+}
 
-let num_results = 15
+let num_results = 15;
 function Home() {
-  const router = useRouter()
-  
+  const router = useRouter();
+
   const { username } = router.query;
-  
-  
-  const [isLoaded, setIsLoaded] = useState(false)
-  const [isError, setIsError] = useState(false)
-  const [nfts, setNfts] = useState([])
-  const [pageNumber, setPageNumber] = useState(0)
-  const [hasMore, setHasMore] = useState(true)
+
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const [nfts, setNfts] = useState([]);
+  const [pageNumber, setPageNumber] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
   const { loading, error, data, refetch, networkStatus } = useQuery(PROFILE, {
-    variables: { username: username, numresults: num_results},
+    variables: { username: username, numresults: num_results },
   });
-  const meQuery = useQuery(ME);
+  const meQuery = useQuery(ME, {
+    onCompleted: (data) => {
+      Mixpanel.track("Profile Page View", {
+        profile: username,
+      });
+    },
+  });
   const [follow] = useMutation(FOLLOW);
-  useEffect(()=>{
-    setIsLoaded(true)
-  }, [loading])
+  useEffect(() => {
+    setIsLoaded(true);
+  }, [loading]);
 
   useEffect(() => {
     if (!loading && !error) {
-      window.addEventListener("scroll", debounce((event) => {
-        let scrollTop = event.target.documentElement.scrollTop;
-        if (document.getElementById("grid")) {
-          let gridHeight = document.getElementById("grid").clientHeight;
-          
-          if (scrollTop + window.innerHeight > gridHeight && data.postList.length >= num_results) {
-            console.log("====")
-            num_results += 15;
-            refetch({username: username, numresults: num_results })
-            
-            
-          }
-        }
+      window.addEventListener(
+        "scroll",
+        debounce((event) => {
+          let scrollTop = event.target.documentElement.scrollTop;
+          if (document.getElementById("grid")) {
+            let gridHeight = document.getElementById("grid").clientHeight;
 
-      }, 100));
+            if (
+              scrollTop + window.innerHeight > gridHeight &&
+              data.postList.length >= num_results
+            ) {
+              console.log("====");
+              num_results += 15;
+              refetch({ username: username, numresults: num_results });
+            }
+          }
+        }, 100)
+      );
     }
   });
 
@@ -124,18 +131,16 @@ function Home() {
       }
     }
     if (!loading && error) {
-      router.replace('/')
+      router.replace("/");
     }
   });
-  
 
   //fetch more assets
   // useEffect(() => {
   //   setIsLoading(true)
   //   setIsError(false)
   //   if(!data){return}
-  
-    
+
   //   setNfts(prevNfts => {
   //       return[...prevNfts, ...data.postList
   //       ]
@@ -147,13 +152,11 @@ function Home() {
   //   else{
   //       setHasMore(true)
   //   }
-    
+
   //   // setHasMore(result.assets.length > 0)
   //   console.log(nfts)
   //   setIsLoading(false)
 
-    
-    
   // }, [pageNumber, data])
 
   function handleFollow() {
@@ -165,7 +168,7 @@ function Home() {
         onCompleted(data) {
           if (data.addFollowing.ok) {
             meQuery.refetch();
-            refetch({variables: {username}});
+            refetch({ variables: { username } });
           } else {
             router.push("/login");
           }
@@ -209,7 +212,7 @@ function Home() {
           )}
           {!meQuery.loading &&
             !meQuery.error &&
-            (meQuery.data.me != null) &&
+            meQuery.data.me != null &&
             !includesName(meQuery.data.me.following, username) && (
               <button
                 type="button"
@@ -221,7 +224,7 @@ function Home() {
             )}
           {!meQuery.loading &&
             !meQuery.error &&
-            (meQuery.data.me != null) &&
+            meQuery.data.me != null &&
             includesName(meQuery.data.me.following, username) && (
               <button
                 type="button"
@@ -236,7 +239,7 @@ function Home() {
           <section class="container overflow-hidden py-5 py-md-6 py-lg-7">
             <div class="masonry-filterable">
               <div
-                className="masonry-grid" 
+                className="masonry-grid"
                 id="grid"
                 data-columns={
                   window.innerWidth > 1200
@@ -247,8 +250,7 @@ function Home() {
                 }
               >
                 {data.postList.map((post, index) => {
-
-                    return(
+                  return (
                     <div class="masonry-grid-item" order={post.order}>
                       <div class="card card-curved-body shadow card-slide">
                         <div class="card-slide-inner">
@@ -261,24 +263,45 @@ function Home() {
                             class="card-body text-center"
                             href={"/post/" + post.id}
                           >
-                            <h3 class="h5 nav-heading mt-1 mb-2">{post.title}</h3>
-                            <p class="fs-sm text-muted mb-1">{post.description}</p>
+                            <h3 class="h5 nav-heading mt-1 mb-2">
+                              {post.title}
+                            </h3>
+                            <p class="fs-sm text-muted mb-1">
+                              {post.description}
+                            </p>
                             {/* <p>{post.order}</p> */}
                           </a>
                         </div>
                       </div>
                       {/* <div class="text-center py-3 pb-md-0" onClick={() => }>Load More</div> */}
                     </div>
-                    )
-                  }
-                )}
+                  );
+                })}
               </div>
             </div>
           </section>
         )}
         {/* <div>{isLoading && loading && <div class="lds-ring"><div></div><div></div><div></div><div></div></div>}</div> */}
-        <div>{loading && <div class="lds-ring"><div></div><div></div><div></div><div></div></div>}</div>
-        <div>{!loading && data.postList.length >= num_results && <div class="lds-ring"><div></div><div></div><div></div><div></div></div>}</div>
+        <div>
+          {loading && (
+            <div class="lds-ring">
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+            </div>
+          )}
+        </div>
+        <div>
+          {!loading && data.postList.length >= num_results && (
+            <div class="lds-ring">
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+            </div>
+          )}
+        </div>
       </main>
     </div>
   );

@@ -13,7 +13,7 @@ import { useRouter } from "next/router";
 import Shuffle from "../../shuffle/shuffle";
 import imagesLoaded from "imagesloaded";
 import 'tailwindcss/tailwind.css'
-
+import { Mixpanel } from '../../utils/Mixpanel';
 
 
 const ME = gql`
@@ -236,6 +236,7 @@ function Home() {
                                     add({
                                         variables: { contractAddress: to_add_addresses, tokenID: to_add_ids },
                                         onCompleted(data) {
+                                            Mixpanel.track('NFTs Posted', {contractAddresses: to_add_addresses, tokenIDs: to_add_ids})
                                         },
                                       });
                                     router.reload();

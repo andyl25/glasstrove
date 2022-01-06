@@ -10,6 +10,7 @@ import HeroHome from "../partials/HeroHome";
 import "tailwindcss/tailwind.css";
 import { gql, useMutation, useQuery, NetworkStatus } from "@apollo/client";
 import { useRouter } from "next/router";
+import { Mixpanel } from "../utils/Mixpanel";
 
 const FEED = gql`
   query feedQuery($numresults: Int!) {
@@ -29,6 +30,7 @@ const FEED = gql`
 const ME = gql`
   query {
     me {
+      id
       username
     }
   }
@@ -51,7 +53,15 @@ let num_results = 15;
 
 function Home() {
   const router = useRouter();
-  const meQuery = useQuery(ME);
+  const meQuery = useQuery(ME, {
+    onCompleted: (data) => {
+      if (data.me == null) {
+        Mixpanel.track("Landing Page View");
+      } else {
+        Mixpanel.track("Feed View");
+      }
+    },
+  });
   const { loading, error, data, refetch } = useQuery(FEED, {
     variables: { numresults: num_results },
   });
@@ -81,25 +91,26 @@ function Home() {
 
   return (
     <div>
-      {meQuery.error || (!meQuery.loading && meQuery.data.me == null) && (
-        <div className="flex flex-col min-h-screen overflow-hidden">
-          {/*  Site header */}
-          <Header />
+      {meQuery.error ||
+        (!meQuery.loading && meQuery.data.me == null && (
+          <div className="flex flex-col min-h-screen overflow-hidden">
+            {/*  Site header */}
+            <Header />
 
-          {/*  Page content */}
-          <main className="flex-grow">
-            {/*  Page sections */}
-            <HeroHome />
-            {/* <FeaturesHome />
+            {/*  Page content */}
+            <main className="flex-grow">
+              {/*  Page sections */}
+              <HeroHome />
+              {/* <FeaturesHome />
       <FeaturesBlocks />
       <Testimonials />
       <Newsletter /> */}
-          </main>
+            </main>
 
-          {/*  Site footer */}
-          {/* <Footer /> */}
-        </div>
-      )}
+            {/*  Site footer */}
+            {/* <Footer /> */}
+          </div>
+        ))}
       {!loading && !error && (
         <div className="flex flex-col min-h-screen overflow-hidden">
           <Header />

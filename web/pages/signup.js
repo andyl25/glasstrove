@@ -4,6 +4,7 @@ import Header from "../partials/Header";
 import "tailwindcss/tailwind.css";
 import { gql, useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
+import { Mixpanel } from "../utils/Mixpanel";
 
 const SIGNUP = gql`
   mutation Signup(
@@ -91,6 +92,7 @@ function Signup() {
                   onCompleted(data) {
                     console.log(data)
                     if (data.register.success) {
+                      Mixpanel.track("Successful Signup", {email, username})
                       router.push("/" + username);
                     }
                   },
