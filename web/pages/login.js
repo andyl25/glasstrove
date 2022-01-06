@@ -21,6 +21,7 @@ const LOGIN = gql`
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [hasError, setHasError] = useState(false);
   const [login] = useMutation(LOGIN);
   const router = useRouter();
 
@@ -65,12 +66,16 @@ function Login() {
                       Mixpanel.people.set({username: username})              
                       router.push("/" + data.login.user.username);
                     }
+                    else{
+                      setHasError(true)
+                    }
                   },
                 })
               }
             >
               Log In
             </button>
+            {hasError && <div class="add-padding font-bold text-red-400">Incorrect username or password. </div> }
           </div>
         </div>
       </main>
