@@ -47,10 +47,6 @@ function Home() {
   const { loading, error, data, refetch } = useQuery(FEED, {
     variables: { numresults: num_results },
   });
-  setTimeout(() => {
-    if (loading)
-      refetch();
-  }, 200);
   useEffect(() => {
     if (!loading && !error) {
       window.addEventListener(

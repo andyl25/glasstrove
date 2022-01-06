@@ -66,7 +66,7 @@ function Signup() {
                 value={email}
                 onChange={(event) => setEmail(event.target.value)}
               />
-              {<div class="add-padding font-bold text-red-400">{emailError}</div> }
+              {<div class="pl-2 pt-2 font-bold text-red-400">{emailError}</div> }
             </div>
             <div class="mb-3">
               <label for="text-input" class="form-label-sm">
@@ -78,7 +78,7 @@ function Signup() {
                 value={username}
                 onChange={(event) => setUsername(event.target.value)}
               />
-              {<div class="add-padding font-bold text-red-400">{usernameError}</div> }
+              {<div class="pl-2 pt-2 font-bold text-red-400">{usernameError}</div> }
             </div>
             <div class="mb-3">
               <label for="pass-input" class="form-label-sm">
@@ -90,6 +90,7 @@ function Signup() {
                 value={password1}
                 onChange={(event) => setPassword1(event.target.value)}
               />
+              {<div class="pl-2 pt-2 font-bold text-red-400"></div> }
               
             </div>
             <div class="mb-3">
@@ -102,7 +103,7 @@ function Signup() {
                 value={password2}
                 onChange={(event) => setPassword2(event.target.value)}
               />
-              {<div class="add-padding font-bold text-red-400">{password2Error}</div> }
+              {<div class="pl-2 pt-2 font-bold text-red-400">{password2Error}</div> }
             </div>
             
 
