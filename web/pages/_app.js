@@ -22,7 +22,7 @@ const link = createHttpLink({
 const AuthLink = new ApolloLink((operation, forward) => {
   let token = cookie.load("csrftoken");
   if (token === undefined || token === null) {
-    fetch(`/csrf`, {
+    return fetch(`/csrf`, {
       credentials: "include",
     }).then((response) => {
       token = response.json().csrfToken;
@@ -55,11 +55,12 @@ class MyApp extends App {
     return (
       <ApolloProvider client={client}>
         <Head>
-          <title>GlassTrove</title>
+          <title>Glasstrove</title>
           <meta
             name="viewport"
             content="initial-scale=1.0, width=device-width"
           />
+          <link rel="icon" href="/images/chest_icon.png"/>
         </Head>
         <Component {...pageProps} />
       </ApolloProvider>
