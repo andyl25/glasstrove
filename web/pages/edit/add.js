@@ -322,7 +322,7 @@ function Home() {
                                     class="card-body text-center"
                                     >
                                     <h3 class="h5 nav-heading mt-1 mb-2">{nft.name}</h3>
-                                    <p class="fs-sm text-muted mb-1">DESCRIPTION</p>
+                                    {/* <p class="fs-sm text-muted mb-1">DESCRIPTION</p> */}
                                     {/* <p>{post.order}</p> */}
                                     </a>
                                 </div>
@@ -373,7 +373,7 @@ function Home() {
                                     class="card-body text-center"
                                     >
                                     <h3 class="h5 nav-heading mt-1 mb-2">{nft.name}</h3>
-                                    <p class="fs-sm text-muted mb-1">DESCRIPTION</p>
+                                    {/* <p class="fs-sm text-muted mb-1">DESCRIPTION</p> */}
                                     {/* <p>{post.order}</p> */}
                                     </a>
                                 </div>
