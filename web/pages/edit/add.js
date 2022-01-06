@@ -81,7 +81,7 @@ function Home() {
         router.reload()
       }
     function redirReorder() {
-        router.push("/edit/reorder")
+        router.push("/edit/delete")
       }
     
 
@@ -202,8 +202,8 @@ function Home() {
                             class="btn btn-translucent-dark border-0 flex flex-nowrap"
                             onClick = {redirReorder}
                         >
-                            <i class="ai-move pr-2 pt-0.5"></i>
-                            <h1 className="text-xl md:text-xl font-extrabold leading-tighter tracking-tighter" data-aos="zoom-y-out"><span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-indigo-500">Reorder Profile</span></h1>
+                            <i class="ai-delete pr-2 pt-0.5"></i>
+                            <h1 className="text-xl md:text-xl font-extrabold leading-tighter tracking-tighter" data-aos="zoom-y-out"><span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-indigo-500">Remove NFTs</span></h1>
                         </button>
                     </div>
                 </div>

@@ -192,23 +192,18 @@ class deleteAll(graphene.Mutation):
 
 class deletePost(graphene.Mutation):
     class Arguments:
-        id = graphene.Int()
+        id = graphene.List(graphene.Int)
     ok = graphene.Boolean()
     
     post = graphene.Field(PostType)
     def mutate(root, info, id):
         user_instance = info.context.user
-        post_instance = Post.objects.get(id = id)
+        
         if not info.context.user.is_authenticated:
             return deletePost(ok=False)
-        if not post_instance in Post.objects.filter(owner = info.context.user):
-            return deletePost(ok=False)
-        if not post_instance.order is None:
-            for post_temp in user_instance.posts.all():
-                if not post_temp.order is None and not post_temp.order < post_instance.order:
-                    post_temp.order = post_temp.order - 1
-                    post_temp.save()
-        post_instance.delete()
+        post_instances = Post.objects.filter(owner=user_instance).filter(id__in = id)
+
+        post_instances.all().delete()
         return deletePost(ok=True)
 
 class Query(graphene.ObjectType):
