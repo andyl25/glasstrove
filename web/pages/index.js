@@ -143,7 +143,14 @@ function Home() {
                 </div>
               </div>
             </section>
+            <div class="even-columns-2 ">
+                    <div class="even-columns-child-2 text-center pb-2 no-underline font-semibold text-gray-500 text-lg items-center group-hover:text-gray-700 space-x-5">
+                        <div class="add-padding font-bold">Follow more creators and collectors to see more! </div>
+                    </div>
+                    
+                </div>
           </main>
+          
         </div>
       )}
     </div>
