@@ -302,7 +302,6 @@ class Mutation(graphene.ObjectType):
     edit_post = EditPost.Field()
     delete_post = deletePost.Field()
     reorder_posts = ReorderPosts.Field()
-    delete_all = deleteAll.Field()
 
 
 

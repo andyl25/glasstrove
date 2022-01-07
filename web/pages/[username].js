@@ -45,6 +45,15 @@ const FOLLOW = gql`
     }
   }
 `;
+const UNFOLLOW = gql`
+  mutation Unfollow($username: String!) {
+    stopFollowing(username: $username) {
+      ok
+    }
+  }
+`;
+
+
 function debounce(func, wait) {
   let timeout;
   return function () {
@@ -81,6 +90,7 @@ function Home() {
     },
   });
   const [follow] = useMutation(FOLLOW);
+  const [unfollow] = useMutation(UNFOLLOW);
   useEffect(() => {
     setIsLoaded(true);
   }, [loading]);
@@ -175,6 +185,26 @@ function Home() {
         },
       });
     }
+    if (!loading && error) {
+      router.replace("/");
+    }
+  }
+  function handleUnfollow() {
+    if (meQuery.data.me == null) {
+      router.push("/login");
+    } else {
+      unfollow({
+        variables: { username: username },
+        onCompleted(data) {
+          if (data.stopFollowing.ok) {
+            meQuery.refetch();
+            refetch({ variables: { username } });
+          } else {
+            router.push("/login");
+          }
+        },
+      });
+    }
   }
 
   function includesName(followerList, specificName) {
@@ -229,7 +259,7 @@ function Home() {
               <button
                 type="button"
                 class="btn btn-translucent-success mt-4"
-                disabled
+                onClick={handleUnfollow}
               >
                 Following
               </button>
@@ -293,7 +323,7 @@ function Home() {
           )}
         </div>
         <div>
-          {!loading && data.postList.length >= num_results && (
+          {!loading && !error && data.postList.length >= num_results && (
             <div class="lds-ring">
               <div></div>
               <div></div>
