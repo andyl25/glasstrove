@@ -123,6 +123,7 @@ function Home() {
           .then(
             (result) => {
                 setNfts(prevNfts => {
+                    if(result.assets!=null){
                     return[...prevNfts, ...result.assets.filter(
                         n =>{ 
                             let already_included = false;
@@ -142,6 +143,7 @@ function Home() {
                             return n;
                         })
                     ]
+                    }
                 })
 
                 if(result.assets.length === 0){
@@ -278,7 +280,7 @@ function Home() {
                 //       : "2"
                 // }
               >
-            {nfts.map((nft, index) =>
+            {nfts!=null && nfts.map((nft, index) =>
                 {
                 
                 let card_selected = handleCardSelected(nft.selected);

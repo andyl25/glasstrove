@@ -82,7 +82,7 @@ class AddPosts(graphene.Mutation):
                         count += 1
 
                     uri += "&offset={}&limit=30".format(i*30)
-                    response = requests.request("GET", uri)
+                    response = requests.request("GET", uri, headers={"X-API-KEY": "5926963383cb434fb2bd228e4bc4e107"})
                     # if response.json()["assets"] is None:
                     #     continue
                     for i in ((response.json()["assets"])):
@@ -108,7 +108,7 @@ class AddPosts(graphene.Mutation):
                 for temp_address in contract_address:
                     uri += "&asset_contract_addresses={}".format(temp_address)
                 uri += "&offset=0&limit=30"
-                response = requests.request("GET", uri)
+                response = requests.request("GET", uri, headers={"X-API-KEY": "5926963383cb434fb2bd228e4bc4e107"})
                 # print(uri)
                 for i in ((response.json()["assets"])):
                     test_post = Post.objects.filter(owner=user_instance).filter(post_token_id = i["token_id"]).filter(post_asset_contract = i["asset_contract"]["address"])
@@ -242,7 +242,7 @@ class Query(graphene.ObjectType):
                     uri += "&token_ids={}".format(post_check.post_token_id)
             uri += "&offset=0&limit=30"
             
-            response = requests.request("GET", uri)
+            response = requests.request("GET", uri, headers={"X-API-KEY": "5926963383cb434fb2bd228e4bc4e107"})
             
             for individual_post in posts_with_wallet:
                 check = False
@@ -283,7 +283,7 @@ class Query(graphene.ObjectType):
         uri += "&asset_contract_addresses={}".format(posts[0].post_asset_contract)
         uri += "&token_ids={}".format(posts[0].post_token_id)
         uri += "&offset=0&limit=30"
-        response = requests.request("GET", uri)
+        response = requests.request("GET", uri, headers={"X-API-KEY": "5926963383cb434fb2bd228e4bc4e107"})
         if(response.json()["assets"][0]["token_id"] == posts[0].post_token_id and response.json()["assets"][0]["asset_contract"]["address"] == posts[0].post_asset_contract):
             return posts
         else:
@@ -302,7 +302,6 @@ class Mutation(graphene.ObjectType):
     edit_post = EditPost.Field()
     delete_post = deletePost.Field()
     reorder_posts = ReorderPosts.Field()
-    delete_all = deleteAll.Field()
 
 
 
