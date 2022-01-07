@@ -280,7 +280,7 @@ function Home() {
                 //       : "2"
                 // }
               >
-            {nfts.map((nft, index) =>
+            {nfts!=null && nfts.map((nft, index) =>
                 {
                 
                 let card_selected = handleCardSelected(nft.selected);
