@@ -88,7 +88,7 @@ function Home() {
       Mixpanel.track("Profile Page View", {
         profile: username,
       });
-      if(username == data.me.username){
+      if(data.me.username != null && username == data.me.username){
         setIsMe(true)
         console.log("got here")
         console.log(isMe)
