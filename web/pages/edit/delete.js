@@ -123,6 +123,16 @@ function Home() {
                             <h1 className="text-xl md:text-xl font-extrabold leading-tighter tracking-tighter" data-aos="zoom-y-out"><span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-indigo-500">Remove NFTs</span></h1>
                         </button>
                     </div>
+                    <div className="px-24 text-center pt-28 mb-4">
+                        <button 
+                            type="button" 
+                            class="btn btn-translucent-dark border-0 flex flex-nowrap"
+                            onClick = {() => {router.push("/wallets")}}
+                        >
+                            <i class="ai-plus-square pr-2 pt-0.5"></i>
+                            <h1 className="text-xl md:text-xl font-extrabold leading-tighter tracking-tighter " data-aos="zoom-y-out"><span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-indigo-500">Add Wallets</span></h1>
+                        </button>
+                    </div>
                 </div>
             </div>
 
