@@ -82,11 +82,17 @@ function Home() {
   const { loading, error, data, refetch, networkStatus } = useQuery(PROFILE, {
     variables: { username: username, numresults: num_results },
   });
+  const [isMe, setIsMe] = useState(false);
   const meQuery = useQuery(ME, {
     onCompleted: (data) => {
       Mixpanel.track("Profile Page View", {
         profile: username,
       });
+      if(username == data.me.username){
+        setIsMe(true)
+        console.log("got here")
+        console.log(isMe)
+      }
     },
   });
   const [follow] = useMutation(FOLLOW);
@@ -242,6 +248,19 @@ function Home() {
           )}
           {!meQuery.loading &&
             !meQuery.error &&
+            isMe &&
+            meQuery.data.me != null &&
+            (
+              <button
+                type="button"
+                class="btn btn-translucent-primary mt-4 mr-2"
+                onClick={() => {router.push("/edit")}}
+              >
+                Edit Profile
+              </button>
+            )}
+          {!meQuery.loading &&
+            !meQuery.error &&
             meQuery.data.me != null &&
             !includesName(meQuery.data.me.following, username) && (
               <button
@@ -280,9 +299,16 @@ function Home() {
                 }
               >
                 {data.postList.map((post, index) => {
+                  let pdescription;
+                  if(post.description!= null && (post.description.length)>40){
+                    pdescription = post.description.slice(0,40) + "..."
+                  }
+                  else{
+                    pdescription = post.description
+                  }
                   return (
                     <div class="masonry-grid-item" order={post.order}>
-                      <div class="card card-curved-body shadow card-slide">
+                      <div class="card card-curved-body shadow card-slide cursor-pointer" onClick= {() => {router.push("/post/" + post.id)}}>
                         <div class="card-slide-inner">
                           <img
                             class="card-img"
@@ -296,8 +322,9 @@ function Home() {
                             <h3 class="h5 nav-heading mt-1 mb-2">
                               {post.title}
                             </h3>
+                            
                             <p class="fs-sm text-muted mb-1">
-                              {post.description}
+                              {pdescription}
                             </p>
                             {/* <p>{post.order}</p> */}
                           </a>

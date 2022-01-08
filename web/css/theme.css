@@ -16896,12 +16896,10 @@ input[type="search"]::-webkit-search-results-decoration {
 }
 
 [class^="btn-translucent-"]:hover,
-[class^="btn-translucent-"]:focus,
 [class^="btn-translucent-"]:active,
 [class^="btn-translucent-"].active,
 [class^="btn-translucent-"].show,
 [class*=" btn-translucent-"]:hover,
-[class*=" btn-translucent-"]:focus,
 [class*=" btn-translucent-"]:active,
 [class*=" btn-translucent-"].active,
 [class*=" btn-translucent-"].show {
@@ -16911,6 +16909,7 @@ input[type="search"]::-webkit-search-results-decoration {
 .btn-translucent-primary {
   /* background-color: rgba(118, 109, 244, 0.08); */
   background-color: rgba(126, 34, 206, 0.08);
+
 }
 
 .btn-translucent-success {
@@ -16954,7 +16953,6 @@ input[type="search"]::-webkit-search-results-decoration {
   color: #766df4;
 }
 .btn-translucent-primary:hover,
-.btn-translucent-primary:focus,
 .btn-translucent-primary:active,
 .btn-translucent-primary.active,
 .btn-translucent-primary.show {

@@ -96,7 +96,7 @@ function Signup() {
       console.log(web3.utils.utf8ToHex('240739'));
       web3.eth.getCoinbase((err, coinbase) => {userAddress = coinbase}).then(() => {
         web3.eth.personal.sign(
-          web3.utils.fromUtf8(data.me.nonce.toString()),
+          web3.utils.fromUtf8("Sign the following message to prove your ownership of the wallet: " + data.me.nonce.toString()),
           userAddress,
           (err, signature) => {
             console.log( signature );
@@ -146,7 +146,7 @@ function Signup() {
                 </div>
             </div>
             <div class="even-columns-child-2 text-center pb-2 no-underline font-semibold text-gray-500 text-lg items-center group-hover:text-gray-700 space-x-5">
-                        <div class="add-padding font-bold">Add more wallets above ^^</div>
+                        <div class="add-padding font-bold">Add a wallet and go to the Edit page to see your unposted NFTs</div>
                  
             </div>
             {loaded && (

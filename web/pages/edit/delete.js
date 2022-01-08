@@ -144,7 +144,7 @@ function Home() {
             <div>
               <div class="even-columns-2 ">
                     <div class="even-columns-child-2 text-center pb-2 no-underline font-semibold text-gray-500 text-lg items-center group-hover:text-gray-700 space-x-5">
-                        <div class="add-padding font-bold">Select individual NFTs or [Shift + Click] an entire row to remove</div>
+                        <div class="add-padding font-bold">Select individual NFTs to remove</div>
                         
                     </div>
                 </div>
