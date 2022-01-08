@@ -20,13 +20,15 @@ const PICTURE = gql`
       owner {
         username
         numfollowers
-      }
+      },
+      openseaLink,
     }
   }
 `;
 
 function Home() {
   const router = useRouter();
+  const [pdes, setPdes] = useState("");
   const { id } = router.query;
   const { loading, error, data, refetch } = useQuery(PICTURE, {
     variables: { id },
@@ -37,6 +39,12 @@ function Home() {
 
   useEffect(() => {
     if (!loading && !error) {
+      if(data.specificPost[0].description == null){
+        setPdes("No Description")
+      }
+      else{
+        setPdes(data.specificPost[0].description)
+      }
       console.log(data);
       //   let grid = document.querySelectorAll(".masonry-grid"),
       //     masonry;
@@ -70,6 +78,8 @@ function Home() {
     }
   });
 
+   
+
   return (
     <div className="flex flex-col min-h-screen overflow-hidden">
       <Header />
@@ -84,6 +94,9 @@ function Home() {
                     <h1 class="h2 text-purple-600">
                       {data.specificPost[0].title}
                     </h1>
+                   <a type="button" class="btn btn-translucent-primary" href = {data.specificPost[0].openseaLink} target = "_blank">View on OpenSea</a>
+                   
+
                     {/* <div class="d-sm-flex align-items-center pt-3 pb-2 mb-5 border-bottom fs-sm">
                     <div class="d-flex align-items-center mb-3">
                       <div class="text-nowrap text-muted me-3"><i class="ai-calendar me-1"></i><span>Aug 28, 2020</span></div>
@@ -122,7 +135,7 @@ function Home() {
 
                     <h3 class="h5 mt-4 mb-1"> Description </h3>
                     <p class="fs-sm mb-4 pb-2">
-                      {data.specificPost[0].description}
+                      {pdes}
                     </p>
 
                     <h3 class="h5 mt-4 mb-1"> Creator </h3>
