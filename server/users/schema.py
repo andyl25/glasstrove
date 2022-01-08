@@ -143,7 +143,8 @@ class AddWallet(graphene.Mutation):
             return AddWallet(ok = false, err = "not authenitcated",wallet = None)
         if(nonce != str(user_instance.nonce)):
             return AddWallet(ok = False, err = "wrong nonce", wallet = None)
-        message = encode_defunct(text=nonce)
+        msg_uncoded = "Sign the following message to prove your ownership of the wallet: " + nonce
+        message = encode_defunct(text=msg_uncoded)
         wallet_address = w3.eth.account.recover_message(message, signature=signature)
         for i in user_instance.wallets.all():
             if(i.address == wallet_address):
